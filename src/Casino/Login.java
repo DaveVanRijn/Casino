@@ -5,6 +5,8 @@
  */
 package Casino;
 
+import static Casino.Main.convertSize;
+import static Casino.Main.getImage;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -36,6 +38,7 @@ public class Login extends javax.swing.JPanel {
     private final JButton btnNewUser;
     private final JButton btnRegister;
     private final JButton btnBack;
+    private JButton btnExit;
     private final JTextField txtLgnName;
     private final JPasswordField txtLgnPass;
     private final JTextField txtNewName;
@@ -347,6 +350,8 @@ public class Login extends javax.swing.JPanel {
         layer.moveToFront(lblPassword);
         layer.moveToFront(lblNameError);
         layer.moveToFront(lblPassError);
+        
+        initComps();
 
     }
 
@@ -414,6 +419,28 @@ public class Login extends javax.swing.JPanel {
                         + "money!", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+    
+    private void initComps(){
+        btnExit = new JButton(new ImageIcon(getClass().getResource("/Img/btnExit.png")));
+        btnExit.setFocusable(false);
+        btnExit.setPressedIcon(new ImageIcon(getClass().getResource("/Img/btnExitPressed.png")));
+        btnExit.addMouseListener(new MouseAdapter(){
+           @Override
+           public void mouseClicked(MouseEvent e){
+               Main.exit();
+           }
+        });
+        
+        //Bounds
+        btnExit.setBounds(616, 10, 164, 53);
+        
+       //add
+        layer.add(btnExit);
+        
+        
+        //Move to front
+        layer.moveToFront(btnExit);
     }
 
     /**

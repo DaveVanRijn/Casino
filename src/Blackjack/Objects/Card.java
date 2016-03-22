@@ -5,7 +5,7 @@
  */
 package Blackjack.Objects;
 
-import static Blackjack.PlaceBet.getImage;
+import static Casino.Main.getImage;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 

@@ -7,14 +7,7 @@ package Blackjack;
 
 import Blackjack.Objects.Card;
 import Blackjack.Objects.CardList;
-import static Blackjack.PlaceBet.SIZE_FACTOR;
-import static Blackjack.PlaceBet.getImage;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
+import static Casino.Main.getImage;
 import java.util.Collections;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -82,28 +75,6 @@ public class DealGame extends javax.swing.JPanel {
         layer.removeAll();
         layer.add(background);
         layer.moveToFront(background);
-    }
-    
-    public static BufferedImage getImage(String name) {
-        Image image = new ImageIcon(PlaceBet.class.getResource("/Img/" + name + ".png")).getImage();
-        int width;
-        int height;
-
-        if (name.equals("backgroundBlackjack")) {
-            Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-            width = screen.width;
-            height = screen.height;
-        } else {
-            width = (int) (image.getWidth(null) * SIZE_FACTOR);
-            height = (int) (image.getHeight(null) * SIZE_FACTOR);
-        }
-
-        BufferedImage buff = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = buff.createGraphics();
-        g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING,
-                RenderingHints.VALUE_RENDER_QUALITY));
-        boolean done = g2d.drawImage(image, 0, 0, width, height, null);
-        return buff;
     }
     
     private void initCards(){

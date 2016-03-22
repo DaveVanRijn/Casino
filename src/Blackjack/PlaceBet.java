@@ -6,21 +6,18 @@
 package Blackjack;
 
 import Casino.Main;
+import static Casino.Main.getImage;
 import Casino.Player;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -83,32 +80,32 @@ public class PlaceBet extends javax.swing.JPanel {
             case 0:
                 Color sepColor = new Color(10, 63, 19);
 
-                bet10.setBounds(getSize(236), getSize(254), getSize(90), getSize(90));
+                bet10.setBounds(Main.convertSize(236), Main.convertSize(254), Main.convertSize(90), Main.convertSize(90));
                 bet10.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-                bet20.setBounds(getSize(356), getSize(254), getSize(90), getSize(90));
+                bet20.setBounds(Main.convertSize(356), Main.convertSize(254), Main.convertSize(90), Main.convertSize(90));
                 bet20.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-                bet50.setBounds(getSize(176), getSize(374), getSize(90), getSize(90));
+                bet50.setBounds(Main.convertSize(176), Main.convertSize(374), Main.convertSize(90), Main.convertSize(90));
                 bet50.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-                bet100.setBounds(getSize(416), getSize(374), getSize(90), getSize(90));
+                bet100.setBounds(Main.convertSize(416), Main.convertSize(374), Main.convertSize(90), Main.convertSize(90));
                 bet100.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-                betCustom.setBounds(getSize(296), getSize(374), getSize(90), getSize(90));
+                betCustom.setBounds(Main.convertSize(296), Main.convertSize(374), Main.convertSize(90), Main.convertSize(90));
                 betCustom.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-                btnPlay.setBounds(getSize(259), getSize(514), getSize(164), getSize(53));
+                btnPlay.setBounds(Main.convertSize(259), Main.convertSize(514), Main.convertSize(164), Main.convertSize(53));
                 btnPlay.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-                btnRemoveLastBet.setBounds(getSize(942), getSize(333), getSize(164), getSize(53));
+                btnRemoveLastBet.setBounds(Main.convertSize(942), Main.convertSize(333), Main.convertSize(164), Main.convertSize(53));
                 btnRemoveLastBet.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-                btnRemoveBet.setBounds(getSize(942), getSize(401), getSize(164), getSize(53));
+                btnRemoveBet.setBounds(Main.convertSize(942), Main.convertSize(401), Main.convertSize(164), Main.convertSize(53));
                 btnRemoveBet.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-                sep.setSize(1, getSize(678));
-                sep.setLocation(getSize(683), getSize(90));
+                sep.setSize(1, Main.convertSize(678));
+                sep.setLocation(Main.convertSize(683), Main.convertSize(90));
                 sep.setBackground(sepColor);
                 sep.setForeground(sepColor);
 
@@ -117,9 +114,9 @@ public class PlaceBet extends javax.swing.JPanel {
                 lblCurrentBet.setFont(STANDARD_FONT);
                 lblCurrentBet.setForeground(Color.WHITE);
 
-                lblPlaceBet.setBounds(getSize(601), getSize(18), getSize(164), getSize(53));
-                lblYourMoney.setBounds(getSize(942), getSize(254/*220*/), lblYourMoney.getPreferredSize().width, getSize(25));
-                lblCurrentBet.setBounds(getSize(942), getSize(293), lblCurrentBet.getPreferredSize().width, getSize(25));
+                lblPlaceBet.setBounds(Main.convertSize(601), Main.convertSize(18), Main.convertSize(164), Main.convertSize(53));
+                lblYourMoney.setBounds(Main.convertSize(942), Main.convertSize(254/*220*/), lblYourMoney.getPreferredSize().width, Main.convertSize(25));
+                lblCurrentBet.setBounds(Main.convertSize(942), Main.convertSize(293), lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
 
                 layer.add(sep);
                 layer.add(lblPlaceBet);
@@ -150,39 +147,14 @@ public class PlaceBet extends javax.swing.JPanel {
         }
     }
 
-    public static BufferedImage getImage(String name) {
-        Image image = new ImageIcon(PlaceBet.class.getResource("/Img/" + name + ".png")).getImage();
-        int width;
-        int height;
-
-        if (name.equals("backgroundBlackjack")) {
-            Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-            width = screen.width;
-            height = screen.height;
-        } else {
-            width = (int) (image.getWidth(null) * SIZE_FACTOR);
-            height = (int) (image.getHeight(null) * SIZE_FACTOR);
-        }
-
-        BufferedImage buff = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = buff.createGraphics();
-        g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING,
-                RenderingHints.VALUE_RENDER_QUALITY));
-        boolean done = g2d.drawImage(image, 0, 0, width, height, null);
-        return buff;
-    }
-
-    public static int getSize(int x) {
-        return (int) (x * SIZE_FACTOR);
-    }
-
     private void initComps() {
         Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
         SIZE_FACTOR = Math.max((double) screensize.width / STANDARD_SCREEN_SIZE.width,
                 (double) screensize.height / STANDARD_SCREEN_SIZE.height);
-        STANDARD_FONT = new Font("Tahoma", Font.PLAIN, getSize(16));
+        STANDARD_FONT = new Font("Tahoma", Font.PLAIN, Main.convertSize(16));
         
         background.setIcon(new ImageIcon(getImage("backgroundBlackjack")));
+        System.out.println(background.getPreferredSize());
         bet10 = new JButton(new ImageIcon(getImage("chipRedBL")));
         bet10.addMouseListener(new MouseAdapter() {
             @Override
@@ -193,9 +165,9 @@ public class PlaceBet extends javax.swing.JPanel {
                     money -= 10;
                     betPlaced = true;
                     lblYourMoney.setText("Your money: \u20ac" + money);
-                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, getSize(25));
+                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
                     lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
-                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, getSize(25));
+                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
                 } else {
                     showError("Not enough money left!");
                 }
@@ -212,9 +184,9 @@ public class PlaceBet extends javax.swing.JPanel {
                     money -= 20;
                     betPlaced = true;
                     lblYourMoney.setText("Your money: \u20ac" + money);
-                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, getSize(25));
+                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
                     lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
-                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, getSize(25));
+                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
                 } else {
                     showError("Not enough money left!");
                 }
@@ -231,9 +203,9 @@ public class PlaceBet extends javax.swing.JPanel {
                     money -= 50;
                     betPlaced = true;
                     lblYourMoney.setText("Your money: \u20ac" + money);
-                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, getSize(25));
+                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
                     lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
-                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, getSize(25));
+                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
                 } else {
                     showError("Not enough money left!");
                 }
@@ -250,9 +222,9 @@ public class PlaceBet extends javax.swing.JPanel {
                     money -= 100;
                     betPlaced = true;
                     lblYourMoney.setText("Your money: \u20ac" + money);
-                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, getSize(25));
+                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
                     lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
-                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, getSize(25));
+                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
                 } else {
                     showError("Not enough money left!");
                 }
@@ -315,9 +287,9 @@ public class PlaceBet extends javax.swing.JPanel {
                                     betPlaced = true;
 
                                     lblYourMoney.setText("Your money: \u20ac" + money);
-                                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, getSize(25));
+                                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
                                     lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
-                                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, getSize(25));
+                                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
                                 } else {
                                     showError("Not enough money left!");
                                     customBet = 0;
@@ -359,9 +331,9 @@ public class PlaceBet extends javax.swing.JPanel {
                     }
 
                     lblYourMoney.setText("Your money: \u20ac" + money);
-                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, getSize(25));
+                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
                     lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
-                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, getSize(25));
+                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
                 }
             }
         });
@@ -376,18 +348,18 @@ public class PlaceBet extends javax.swing.JPanel {
                 betPlaced = false;
 
                 lblYourMoney.setText("Your money: \u20ac" + money);
-                lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, getSize(25));
+                lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
                 lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
-                lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, getSize(25));
+                lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
             }
         });
 
         btnBack = new JButton(new ImageIcon(getImage("btnBack")));
         btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnBack.setBounds(getSize(1182), getSize(18), getSize(164), getSize(53));
+        btnBack.setBounds(Main.convertSize(1182), Main.convertSize(18), Main.convertSize(164), Main.convertSize(53));
         btnBack.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 if (betPlaced) {
                     int option = JOptionPane.showOptionDialog(null, "You will lose your bet "
                             + "if you go back now, proceed?", "Confirm",

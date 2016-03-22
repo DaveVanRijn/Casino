@@ -6,12 +6,20 @@
  */
 package Casino;
 
+import static Blackjack.PlaceBet.SIZE_FACTOR;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.Frame;
+import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -23,6 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -45,12 +54,15 @@ public class Main extends javax.swing.JFrame {
     private static String rememberName = null;
     private static String rememberPass = null;
     private static EncryptionKey key;
+    private static double SIZE_FACTOR;
 
     /**
      * Creates new form Main
      */
     public Main() {
+        setUndecorated(true);
         key = new EncryptionKey();
+        setSizeFactor();
         UIManager.put("OptionPane.messageFont", new FontUIResource(standardFont));
         UIManager.put("OptionPane.buttonFont", new FontUIResource(standardFont));
         initComponents();
@@ -205,6 +217,53 @@ public class Main extends javax.swing.JFrame {
 
     public static String isEncryptSupported(String s) {
         return key.isSupported(s);
+    }
+
+    private static void setSizeFactor() {
+        Rectangle screenSpace = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+        Dimension currentScreenSize = new Dimension((int) screenSpace.getWidth(), (int) screenSpace.getHeight());
+        Dimension standardScreenSize = new Dimension(1366, 728);
+
+        SIZE_FACTOR = Math.min((double) currentScreenSize.width
+                / standardScreenSize.width, (double) currentScreenSize.height
+                / standardScreenSize.height);
+        System.out.println(SIZE_FACTOR);
+    }
+
+    public static BufferedImage getImage(String name) {
+        Image image = new ImageIcon(Main.class.getResource("/Img/" + name + ".png")).getImage();
+        int width;
+        int height;
+
+        if (name.equals("backgroundBlackjack")) {
+            Rectangle screenSize = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+            width = (int) screenSize.getWidth();
+            height = (int) screenSize.getHeight();
+        } else {
+            width = (int) (image.getWidth(null) * SIZE_FACTOR);
+            height = (int) (image.getHeight(null) * SIZE_FACTOR);
+        }
+
+        BufferedImage buff = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = buff.createGraphics();
+        g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING,
+                RenderingHints.VALUE_RENDER_QUALITY));
+        boolean done = g2d.drawImage(image, 0, 0, width, height, null);
+        return buff;
+    }
+
+    public static int convertSize(int original) {
+        return (int) (original * SIZE_FACTOR);
+    }
+
+    public static void exit() {
+        int option = JOptionPane.showOptionDialog(null,
+                "Are you sure you want to exit?", "Confirm",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+                null, "No");
+        if (option == JOptionPane.YES_OPTION) {
+            mainframe.dispatchEvent(new WindowEvent(mainframe, WindowEvent.WINDOW_CLOSING));
+        }
     }
 
     private static boolean checkRemember() {

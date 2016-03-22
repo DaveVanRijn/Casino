@@ -6,6 +6,8 @@
 package Casino;
 
 import Blackjack.PlaceBet;
+import static Casino.Main.convertSize;
+import static Casino.Main.getImage;
 import Roulette.Betting;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
@@ -25,21 +27,21 @@ public class Startpage extends javax.swing.JPanel {
     public Startpage() {
         initComponents();
         JButton btnRoulette = new JButton(
-                new ImageIcon(getClass().getResource("/Img/btnRoulette.png")));
+                new ImageIcon(getImage("btnRoulette")));
         JButton btnBlackjack = new JButton(
-                new ImageIcon(getClass().getResource("/Img/btnBlackjack.png")));
+                new ImageIcon(getImage("btnBlackjack")));
         JButton btnLogout = new JButton(
-                new ImageIcon(getClass().getResource("/Img/btnLogout.png")));
+                new ImageIcon(getImage("btnLogout")));
         JButton btnPlayer = new JButton(
-                new ImageIcon(getClass().getResource("/Img/btnPlayer.png")));
+                new ImageIcon(getImage("btnPlayer")));
         
-        btnRoulette.setBounds(262, 180, 275, 110);
+        btnRoulette.setBounds(convertSize(262), convertSize(180), convertSize(275), convertSize(110));
         btnRoulette.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnBlackjack.setBounds(262, 320, 275, 110);
+        btnBlackjack.setBounds(convertSize(262), convertSize(320), convertSize(275), convertSize(110));
         btnBlackjack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnLogout.setBounds(635, 20, 124, 40);
+        btnLogout.setBounds(convertSize(635), convertSize(20), convertSize(124), convertSize(40));
         btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnPlayer.setBounds(491, 20, 124, 40);
+        btnPlayer.setBounds(convertSize(491), convertSize(20), convertSize(124), convertSize(40));
         
         btnRoulette.addMouseListener(new MouseAdapter(){
             @Override
@@ -69,6 +71,8 @@ public class Startpage extends javax.swing.JPanel {
                Main.setPanel(new PlayerPage());
            }
         });
+        
+        lblBackground.setIcon(new ImageIcon(getImage("backgroundStartpage")));
         
         layer.add(btnRoulette);
         layer.add(btnBlackjack);
