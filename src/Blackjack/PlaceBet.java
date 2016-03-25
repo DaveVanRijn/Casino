@@ -154,7 +154,6 @@ public class PlaceBet extends javax.swing.JPanel {
         STANDARD_FONT = new Font("Tahoma", Font.PLAIN, Main.convertSize(16));
         
         background.setIcon(new ImageIcon(getImage("backgroundBlackjack")));
-        System.out.println(background.getPreferredSize());
         bet10 = new JButton(new ImageIcon(getImage("chipRedBL")));
         bet10.addMouseListener(new MouseAdapter() {
             @Override

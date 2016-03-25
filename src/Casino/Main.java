@@ -6,7 +6,6 @@
  */
 package Casino;
 
-import static Blackjack.PlaceBet.SIZE_FACTOR;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -16,7 +15,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -227,7 +225,6 @@ public class Main extends javax.swing.JFrame {
         SIZE_FACTOR = Math.min((double) currentScreenSize.width
                 / standardScreenSize.width, (double) currentScreenSize.height
                 / standardScreenSize.height);
-        System.out.println(SIZE_FACTOR);
     }
 
     public static BufferedImage getImage(String name) {

@@ -423,17 +423,18 @@ public class Login extends javax.swing.JPanel {
     
     private void initComps(){
         btnExit = new JButton(new ImageIcon(getClass().getResource("/Img/btnExit.png")));
+        btnExit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnExit.setFocusable(false);
         btnExit.setPressedIcon(new ImageIcon(getClass().getResource("/Img/btnExitPressed.png")));
         btnExit.addMouseListener(new MouseAdapter(){
            @Override
-           public void mouseClicked(MouseEvent e){
+           public void mouseReleased(MouseEvent e){
                Main.exit();
            }
         });
         
         //Bounds
-        btnExit.setBounds(616, 10, 164, 53);
+        btnExit.setBounds(convertSize(616), convertSize(10), convertSize(164), convertSize(53));
         
        //add
         layer.add(btnExit);
