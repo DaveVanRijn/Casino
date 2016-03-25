@@ -15,35 +15,48 @@ import java.util.ListIterator;
  *
  * @author Dave van Rijn, Student 500714558, Klas IS202
  */
-public class CardList implements List<Card>{
+public class CardList implements List<Card> {
 
     private final List<Card> cards;
-    
-    public CardList(){
+
+    public CardList() {
         cards = new ArrayList<>();
     }
-    
-    public boolean containsAce(){
-        for(Card c : cards){
-            if(c.getName().equals("Ace") && c.getValue() == 11){
+
+    public boolean containsAce() {
+        for (Card c : cards) {
+            if (c.getName().equals("Ace") && c.getValue() == 11) {
                 return true;
             }
         }
         return false;
     }
-    
-    public Card getAce(){
+
+    public Card getAce() {
         Card ace = null;
-        if(containsAce()){
-            for(Card c : cards){
-                if(c.getName().equals("Ace") && c.getValue() == 11){
+        if (containsAce()) {
+            for (Card c : cards) {
+                if (c.getName().equals("Ace") && c.getValue() == 11) {
                     return c;
                 }
             }
         }
         return ace;
     }
-    
+
+    public int getValue() {
+        int value = 0;
+        for (Card c : cards) {
+            value += c.getValue();
+            if (value > 21 && containsAce()) {
+                getAce().setValue(1);
+                return getValue();
+            }
+        }
+
+        return value;
+    }
+
     @Override
     public int size() {
         return cards.size();
@@ -57,8 +70,8 @@ public class CardList implements List<Card>{
     @Override
     public boolean contains(Object o) {
         Card card = (Card) o;
-        for(Card c : cards){
-            if(c.toString().equals(card.toString())){
+        for (Card c : cards) {
+            if (c.toString().equals(card.toString())) {
                 return true;
             }
         }
@@ -164,11 +177,11 @@ public class CardList implements List<Card>{
     public List<Card> subList(int fromIndex, int toIndex) {
         return cards.subList(fromIndex, toIndex);
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder builder = new StringBuilder();
-        for(Card c :cards){
+        for (Card c : cards) {
             builder.append(c.toString());
             builder.append(" value: ");
             builder.append(c.getValue());
@@ -176,5 +189,5 @@ public class CardList implements List<Card>{
         }
         return builder.toString();
     }
-    
+
 }

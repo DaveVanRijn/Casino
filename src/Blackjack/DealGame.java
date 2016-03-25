@@ -57,19 +57,6 @@ public class DealGame extends javax.swing.JPanel {
         dealerCards = new CardList();
     }
     
-    private int getValue(CardList cards){
-        int value = 0;
-        for(Card c : cards){
-            value += c.getValue();
-            if(value > 21 && cards.containsAce()){
-                cards.getAce().setValue(1);
-                return getValue(cards);
-            }
-        }
-        
-        return value;
-    }
-    
     private void initComps(){
         background.setIcon(new ImageIcon(getImage("backgroundBlackjack")));
         layer.removeAll();
