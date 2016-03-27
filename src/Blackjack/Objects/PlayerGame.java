@@ -14,12 +14,13 @@ public class PlayerGame {
     private final CardList cards;
     private long wager;
     private int multiplier;
-    private final boolean blackjack;
+    private boolean blackjack;
     
-    public PlayerGame(Card first, Card second){
+    public PlayerGame(Card first, Card second, long wager){
         cards = new CardList();
         cards.add(first);
         cards.add(second);
+        this.wager = wager;
         blackjack = getValue() == 21;
     }
     
@@ -27,20 +28,40 @@ public class PlayerGame {
         return cards.getValue();
     }
     
-    public long getWager(){
-        return wager;
-    }
-    
-    public boolean tooMuch(){
-        return getValue() > 21;
+    public boolean hasSevenCards(){
+        return getValue() <= 21 && cards.size() == 7;
     }
     
     public boolean isBlackjack(){
         return blackjack;
     }
     
+    /**
+     * 
+     * @param c The card that is added
+     * @return false if no event occurs (too much points or 7 cards), true if an
+     * event does occur
+     */
     public boolean addCard(Card c){
         cards.add(c);
-        return getValue() <= 21 && cards.size() == 7;
+        return getValue() <= 21 && cards.size() < 7;
+    }
+    
+    public Card removeLast(){
+        return cards.remove(cards.size() - 1);
+    }
+    
+    public Card removeCard(Card card){
+        return cards.remove(cards.indexOf(card));
+    }
+    
+    public long getPayout(){
+        return wager * multiplier;
+    }
+    
+    public void clear(){
+        cards.clear();
+        blackjack = false;
+        multiplier = 0;
     }
 }
