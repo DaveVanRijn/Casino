@@ -37,8 +37,6 @@ import javax.swing.SwingConstants;
 public class PlaceBet extends javax.swing.JPanel {
 
     private final int BETTING_SCREEN = 0;
-    private final Dimension STANDARD_SCREEN_SIZE = new Dimension(1366, 768);
-    public static double SIZE_FACTOR;
     private Font STANDARD_FONT;
     
     private long bet = 0;
@@ -148,9 +146,6 @@ public class PlaceBet extends javax.swing.JPanel {
     }
 
     private void initComps() {
-        Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
-        SIZE_FACTOR = Math.max((double) screensize.width / STANDARD_SCREEN_SIZE.width,
-                (double) screensize.height / STANDARD_SCREEN_SIZE.height);
         STANDARD_FONT = new Font("Tahoma", Font.PLAIN, Main.convertSize(16));
         
         background.setIcon(new ImageIcon(getImage("backgroundBlackjack")));

@@ -252,6 +252,10 @@ public class Main extends javax.swing.JFrame {
     public static int convertSize(int original) {
         return (int) (original * SIZE_FACTOR);
     }
+    
+    public static double getSizeFactor(){
+        return SIZE_FACTOR;
+    }
 
     public static void exit() {
         int option = JOptionPane.showOptionDialog(null,

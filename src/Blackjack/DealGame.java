@@ -84,7 +84,7 @@ public class DealGame extends javax.swing.JPanel {
                 name = names[3];
                 value = 11;
             }
-            cards.add(new Card(value, name, suit));
+            cards.add(new Card(value, name, suit, -1));
             if(++counter == 15){
                 counter= 2;
             }
