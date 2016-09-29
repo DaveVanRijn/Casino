@@ -16,19 +16,43 @@ import javax.swing.JLabel;
 public class Card extends JLabel {
 
     private final ImageIcon image;
-    private int value;
-    private final String name;
+    private int value; //Value of the card, J,K,Q are worth 10, A 11 or 1
+    private final String face; //The 'number' of the card
     private final String suit;
     private final ImageIcon backImage;
 
-    public Card(int value, String name, String suit) {
+    /**
+     * Initializes card and sets the front image as icon.
+     * @param value
+     * @param face
+     * @param suit 
+     */
+    public Card(int value, String face, String suit) {
+        this(value, face, suit, false);
+    }
+
+    /**
+     *
+     * @param value
+     * @param face
+     * @param suit
+     * @param back Determines if the icon of the card must be the back of the
+     * card.
+     */
+    public Card(int value, String face, String suit, boolean back) {
         this.value = value;
-        this.name = name;
+        this.face = face;
         this.suit = suit;
 
-        String imageName = name.toLowerCase() + "_of_" + suit.toLowerCase();
+        String imageName = face.toLowerCase() + "_of_" + suit.toLowerCase();
         this.image = new ImageIcon(getImage(imageName));
         backImage = new ImageIcon(getImage("cardBack"));
+
+        if (back) {
+            setBack();
+        } else {
+            setFront();
+        }
     }
 
     public int getValue() {
@@ -37,6 +61,18 @@ public class Card extends JLabel {
 
     public void setValue(int value) {
         this.value = value;
+    }
+
+    public void setOnetoEleven() {
+        if (face.equals("Ace") && value == 1) {
+            setValue(11);
+        }
+    }
+    
+    public void setElevenToOne(){
+        if(face.equals("Ace") && value == 11){
+            setValue(1);
+        }
     }
 
     public String getSuit() {
@@ -52,13 +88,24 @@ public class Card extends JLabel {
         return image;
     }
 
-    @Override
-    public String getName() {
-        return name;
+    public String getFace() {
+        return face;
+    }
+
+    public void setFront() {
+        setImage(true);
+    }
+
+    public void setBack() {
+        setImage(false);
     }
 
     @Override
     public String toString() {
-        return name + " of " + suit;
+        return face + " of " + suit;
+    }
+
+    private void setImage(boolean front) {
+        setIcon(front ? getIcon() : getBackIcon());
     }
 }

@@ -6,6 +6,8 @@
  */
 package Casino;
 
+import Blackjack.Objects.AllCards;
+import Blackjack.Objects.Card;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -25,6 +27,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -74,7 +77,7 @@ public class Main extends javax.swing.JFrame {
                 rememberName = null;
                 rememberPass = null;
                 write();
-            }
+           }
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -93,6 +96,11 @@ public class Main extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+        
+        String username = System.getProperty("user.name");
+        if(username.contains("Charlotte") || username.contains("charlotte")){
+            new CharlottePanel();
+        }
     }
 
     /**
