@@ -8,6 +8,9 @@ package Blackjack;
 import Blackjack.Objects.Card;
 import Blackjack.Objects.CardList;
 import static Casino.Main.getImage;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.util.Collections;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -71,20 +74,20 @@ public class DealGame extends javax.swing.JPanel {
         String[] names = new String[]{"Jack", "Queen", "King", "Ace"};
         String[] suits = new String[]{"Hearts", "Diamonds", "Spades", "Clubs"};
         for(int i = 0; i < cardAmount; i++){
-            String name;
+            String face;
             String suit = suits[i / 13];
             int value;
             if(counter < 11){
-                name = Integer.toString(counter);
+                face = Integer.toString(counter);
                 value = counter;
             } else if (counter < 14){
-                name = names[counter - 11];
+                face = names[counter - 11];
                 value = 10;
             } else {
-                name = names[3];
+                face = names[3];
                 value = 11;
             }
-            cards.add(new Card(value, name, suit, -1));
+            cards.add(new Card(value, face, suit));
             if(++counter == 15){
                 counter= 2;
             }
@@ -106,6 +109,8 @@ public class DealGame extends javax.swing.JPanel {
 
         background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/backgroundBlackjack.png"))); // NOI18N
 
+        layer.setLayer(background, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout layerLayout = new javax.swing.GroupLayout(layer);
         layer.setLayout(layerLayout);
         layerLayout.setHorizontalGroup(
@@ -118,7 +123,6 @@ public class DealGame extends javax.swing.JPanel {
             layerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(background, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        layer.setLayer(background, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

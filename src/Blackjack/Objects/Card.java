@@ -5,15 +5,7 @@
  */
 package Blackjack.Objects;
 
-import static Casino.Main.convertSize;
 import static Casino.Main.getImage;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -21,26 +13,45 @@ import javax.swing.JLabel;
  *
  * @author Dave van Rijn, Student 500714558, Klas IS202
  */
-public class Card {
+public class Card extends JLabel {
 
     private final ImageIcon image;
-    private JLabel label;
-    private int value;
-    private final String name;
+    private int value; //Value of the card, J,K,Q are worth 10, A 11 or 1
+    private final String face; //The 'number' of the card
     private final String suit;
     private final ImageIcon backImage;
 
-    public Card(int value, String name, String suit, int location) {
+    /**
+     * Initializes card and sets the front image as icon.
+     * @param value
+     * @param face
+     * @param suit 
+     */
+    public Card(int value, String face, String suit) {
+        this(value, face, suit, false);
+    }
+
+    /**
+     *
+     * @param value
+     * @param face
+     * @param suit
+     * @param back Determines if the icon of the card must be the back of the
+     * card.
+     */
+    public Card(int value, String face, String suit, boolean back) {
         this.value = value;
-        this.name = name;
+        this.face = face;
         this.suit = suit;
 
-        String imageName = name.toLowerCase() + "_of_" + suit.toLowerCase();
-        image = new ImageIcon(getImage(imageName));
+        String imageName = face.toLowerCase() + "_of_" + suit.toLowerCase();
+        this.image = new ImageIcon(getImage(imageName));
         backImage = new ImageIcon(getImage("cardBack"));
 
-        if (location >= 0 && location < 7) {
-            setParams(location);
+        if (back) {
+            setBack();
+        } else {
+            setFront();
         }
     }
 
@@ -52,6 +63,18 @@ public class Card {
         this.value = value;
     }
 
+    public void setOnetoEleven() {
+        if (face.equals("Ace") && value == 1) {
+            setValue(11);
+        }
+    }
+    
+    public void setElevenToOne(){
+        if(face.equals("Ace") && value == 11){
+            setValue(1);
+        }
+    }
+
     public String getSuit() {
         return suit;
     }
@@ -60,39 +83,29 @@ public class Card {
         return backImage;
     }
 
+    @Override
     public ImageIcon getIcon() {
         return image;
     }
 
-    public String getName() {
-        return name;
+    public String getFace() {
+        return face;
+    }
+
+    public void setFront() {
+        setImage(true);
+    }
+
+    public void setBack() {
+        setImage(false);
     }
 
     @Override
     public String toString() {
-        return name + " of " + suit;
+        return face + " of " + suit;
     }
 
-    private void setParams(int location) {
-        final int[] degrees = new int[]{0, 0, -30, -15, 0, 15, 30};
-        final Point[] locations = new Point[]{};
-
-        label = new CardLabel(image, degrees[location], locations[location]);
-    }
-
-    private ImageIcon turn(ImageIcon image, int degrees, Dimension size) {
-        if (degrees == 0) {
-            return image;
-        }
-        BufferedImage buff = new BufferedImage((int) size.getWidth(),
-                (int) size.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = buff.createGraphics();
-        g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING,
-                RenderingHints.VALUE_RENDER_QUALITY));
-        AffineTransform trans = AffineTransform.getRotateInstance(Math.toRadians(degrees), image.getIconWidth() / 2, image.getIconHeight() / 2);
-
-        g2d.drawImage(image.getImage(), trans, null);
-
-        return new ImageIcon(buff);
+    private void setImage(boolean front) {
+        setIcon(front ? getIcon() : getBackIcon());
     }
 }

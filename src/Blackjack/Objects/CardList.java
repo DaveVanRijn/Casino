@@ -25,7 +25,7 @@ public class CardList implements List<Card> {
 
     public boolean containsAce() {
         for (Card c : cards) {
-            if (c.getName().equals("Ace") && c.getValue() == 11) {
+            if (c.getFace().equals("Ace") && c.getValue() == 11) {
                 return true;
             }
         }
@@ -33,15 +33,14 @@ public class CardList implements List<Card> {
     }
 
     public Card getAce() {
-        Card ace = null;
         if (containsAce()) {
             for (Card c : cards) {
-                if (c.getName().equals("Ace") && c.getValue() == 11) {
+                if (c.getFace().equals("Ace") && c.getValue() == 11) {
                     return c;
                 }
             }
         }
-        return ace;
+        return null;
     }
 
     public int getValue() {
@@ -86,11 +85,6 @@ public class CardList implements List<Card> {
     @Override
     public Object[] toArray() {
         return cards.toArray();
-    }
-
-    @Override
-    public <T> T[] toArray(T[] a) {
-        return cards.toArray(a);
     }
 
     @Override
@@ -188,6 +182,11 @@ public class CardList implements List<Card> {
             builder.append("\n");
         }
         return builder.toString();
+    }
+
+    @Override
+    public <T> T[] toArray(T[] a) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
