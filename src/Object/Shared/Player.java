@@ -5,31 +5,36 @@
  */
 package Object.Shared;
 
+import Resources.Java.Shared.Database;
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Dave van Rijn, Student 500714558, Klas IS-202
  */
-public class Player implements Serializable{
-    private String username;
+public class Player implements Serializable {
+
+    private final String USERNAME;
+    
     private String password;
-    private long money;
-    private static Player currentPlayer = null;
+    private int money;
     private int rouletteWinCounter;
     private int roulettePlayedCounter;
-    private final DecimalFormat deciForm = new DecimalFormat("0.00");
-    
+    private final DecimalFormat DECI_FORM = new DecimalFormat("0.00");
+
     /**
      * Construct a Player
-     * 
-     * @param username The username of the player
+     *
+     * @param username The USERNAME of the player
      * @param password The password of the player
      * @param money The amount of ingame money of the player
      */
-    private Player(String username, String password, long money){
-        this.username = username;
+    private Player(String username, String password, int money) {
+        this.USERNAME = username;
         this.password = password;
         this.money = money;
         rouletteWinCounter = 0;
@@ -37,25 +42,17 @@ public class Player implements Serializable{
     }
 
     /**
-     * Get the username of the player
-     * 
-     * @return The username of the player
+     * Get the USERNAME of the player
+     *
+     * @return The USERNAME of the player
      */
     public String getUsername() {
-        return username;
-    }
-
-    /**
-     * Set the username of the player
-     * @param username The new username of the player
-     */
-    public void setUsername(String username) {
-        this.username = username;
+        return USERNAME;
     }
 
     /**
      * Get the password of the player
-     * 
+     *
      * @return The password of the player
      */
     public String getPassword() {
@@ -64,98 +61,104 @@ public class Player implements Serializable{
 
     /**
      * Set the password of the player
-     * 
-     * @param password The new password of the player 
+     *
+     * @param password The new password of the player
      */
     public void setPassword(String password) {
-        this.password = password;
+        try {
+            this.password = password;
+
+            Database db = new Database();
+            if (db.isCurrentPlayer(this)) {
+                db.putCurrentPlayer(this);
+            }
+            db.editPlayer(this);
+        } catch (IOException ex) {
+            Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
      * Get the ingame money of the player
-     * 
-     * @return The ingame money of the player 
+     *
+     * @return The ingame money of the player
      */
-    public long getMoney() {
+    public int getMoney() {
         return money;
     }
 
     /**
      * Set the ingame money of the player
-     * 
+     *
      * @param money The new ingame money
      */
-    public void setMoney(long money) {
-        this.money = money;
-    }
-    
-    public int getRoulettePlayed(){
-        return roulettePlayedCounter;
-    }
-    
-    public void addRoulettePlayed(){
-        roulettePlayedCounter++;
-    }
-    
-    public int getRouletteWon(){
-        return rouletteWinCounter;
-    }
-    
-    public void addRouletteWon(){
-        rouletteWinCounter++;
-    }
-    
-    public String getRoulettePercentageWon(){
-        if(rouletteWinCounter == 0 || roulettePlayedCounter == 0){
-            return deciForm.format(0);
-        } else {
-            return deciForm.format(((double)rouletteWinCounter / (double)roulettePlayedCounter) * 100);
+    public void setMoney(int money) {
+        try {
+            this.money = money;
+
+            Database db = new Database();
+            if (db.isCurrentPlayer(this)) {
+                db.putCurrentPlayer(this);
+            }
+            db.editPlayer(this);
+        } catch (IOException ex) {
+            Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    /**
-     * Set currentPlayer to a new instance of Player
-     * 
-     * @param player The current player
-     */
-    public static void setCurrentPlayer(Player player){
-        currentPlayer = player;
+
+    public int getRoulettePlayed() {
+        return roulettePlayedCounter;
     }
-    
-    /**
-     * Get the current player
-     * 
-     * @return The current player of the game
-     */
-    public static Player getCurrentPlayer(){
-        return currentPlayer;
+
+    public void addRoulettePlayed() {
+        try {
+            roulettePlayedCounter++;
+
+            Database db = new Database();
+            if (db.isCurrentPlayer(this)) {
+                db.putCurrentPlayer(this);
+            }
+            db.editPlayer(this);
+        } catch (IOException ex) {
+            Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
-    /**
-     * Nullify the current player
-     */
-    public static void deleteCurrentPlayer(){
-        currentPlayer = null;
+
+    public int getRouletteWon() {
+        return rouletteWinCounter;
     }
-    
-    /**
-     * Get whether or not someone is logged in
-     * 
-     * @return  True if someone is logged in, false if no one is logged in
-     */
-    public static boolean getLoggedIn(){
-        return currentPlayer != null;
+
+    public void addRouletteWon() {
+        try {
+            rouletteWinCounter++;
+            
+            Database db = new Database();
+            if (db.isCurrentPlayer(this)) {
+                db.putCurrentPlayer(this);
+            }
+            db.editPlayer(this);
+        } catch (IOException ex) {
+            Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
+    public String getRoulettePercentageWon() {
+        if (rouletteWinCounter == 0 || roulettePlayedCounter == 0) {
+            return DECI_FORM.format(0);
+        } else {
+            return DECI_FORM.format(((double) rouletteWinCounter / (double) roulettePlayedCounter) * 100);
+        }
+    }
+
     /**
      * Add a new player to the game
-     * 
-     * @param username The username of the new Player
+     *
+     * @param username The USERNAME of the new Player
      * @param password The password of the new player
      * @param money The amount of ingame money of the new player
      * @return The newly constructed player
      */
-    public static Player newPlayer(String username, String password, long money){
+    public static Player newPlayer(String username, String password, int money) {
         return new Player(username, password, money);
     }
 }

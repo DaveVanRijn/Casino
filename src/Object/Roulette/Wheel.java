@@ -27,21 +27,21 @@ public class Wheel extends JComponent {
     boolean doDelay = true;
     private final int DELAY;
     private final Timer TIME;
-    Image wheel;
-    int angle = 0;
+    private final Image WHEEL;
+    private int angle = 0;
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         angle += 1;
-        AffineTransform trans = AffineTransform.getRotateInstance(angle / 10.0, wheel.getWidth(null) / 2, wheel.getHeight(null) / 2);
-        ((Graphics2D) g).drawImage(wheel, trans, this);
+        AffineTransform trans = AffineTransform.getRotateInstance(angle / 10.0, WHEEL.getWidth(null) / 2, WHEEL.getHeight(null) / 2);
+        ((Graphics2D) g).drawImage(WHEEL, trans, this);
     }
 
     public Wheel(double endAngle) {
         this.DELAY = 15;
         this.TIME = new Timer(DELAY, null);
-        wheel = new ImageIcon(getClass().getResource("/Img/wheel.png")).getImage();
+        WHEEL = new ImageIcon(getClass().getResource("/Img/wheel.png")).getImage();
         ActionListener taskPerformer = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {

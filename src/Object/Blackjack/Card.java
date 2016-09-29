@@ -19,7 +19,6 @@ public class Card extends JLabel {
     private int value; //Value of the card, J,K,Q are worth 10, A 11 or 1
     private final String face; //The 'number' of the card
     private final String suit;
-    private final ImageIcon backImage;
 
     /**
      * Initializes card and sets the front image as icon.
@@ -46,7 +45,6 @@ public class Card extends JLabel {
 
         String imageName = face.toLowerCase() + "_of_" + suit.toLowerCase();
         this.image = new ImageIcon(getImage(imageName));
-        backImage = new ImageIcon(getImage("cardBack"));
 
         if (back) {
             setBack();
@@ -80,7 +78,7 @@ public class Card extends JLabel {
     }
 
     public ImageIcon getBackIcon() {
-        return backImage;
+        return new ImageIcon(getImage("cardBack"));
     }
 
     @Override

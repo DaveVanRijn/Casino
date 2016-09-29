@@ -10,6 +10,7 @@ import Object.Shared.Player;
 import Object.Roulette.Bet;
 import Object.Roulette.Clickable;
 import Object.Roulette.Wheel;
+import Resources.Java.Shared.Database;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -52,40 +53,40 @@ import org.netbeans.lib.awtextra.AbsoluteLayout;
  */
 public class Betting extends javax.swing.JPanel {
 
+    private final Database DB;
+    private final Player CURRENT;
+    private final List<Bet> BETS = new ArrayList<>();
+    private final int MOUSE_X_MIN = 54;
+    private final int MOUSE_X_MAX = 907;
+    private final int MOUSE_Y_MIN = 20;
+    private final int MOUSE_Y_MAX = 455;
+    private final int CHIP_SIZE = 87;
+    private final Map<Integer, Double> ANGLE_MAP = new HashMap<>();
+
+    private final DecimalFormat DECI_FORM = new DecimalFormat("0.00");
+    private final Font STANDARD_FONT = new Font("Tahoma", Font.PLAIN, 16);
+
     private List<Clickable> choices;
-    private final List<Bet> bets = new ArrayList<>();
-    private final int mouseXMin = 54;
-    private final int mouseXMax = 907;
-    private final int mouseYMin = 20;
-    private final int mouseYMax = 455;
-    private final int chipSize = 87;
-    private int currentWager = 10;
-    private long wager = 0;
-    private JLabel lblTotalWager;
-    private JLabel lblCash;
-    private JLabel lblCurrentWager;
-    private JLabel lblChooseWager;
-    private JButton btnBet10;
-    private JButton btnBet20;
-    private JButton btnBet50;
-    private JButton btnBet100;
-    private JButton btnBetCustom;
-    private JButton btnPlay;
-    private JButton btnBack;
-    private long money = Player.getCurrentPlayer().getMoney();
-    private int random = -1;
     static boolean isActive = true;
-    private final Map<Integer, Double> angleMap = new HashMap<>();
+    private int currentWager = 10;
+    private int wager = 0;
+    private int money;
+    private int random = -1;
     private static JDialog wheelFrame;
-    //Utils
-    private final DecimalFormat deciForm = new DecimalFormat("0.00");
-    private final Font standardFont = new Font("Tahoma", Font.PLAIN, 16);
 
     /**
      * Creates new form Betting
      */
-    public Betting() {
+    public Betting() throws IOException, NullPointerException {
         initComponents();
+
+        DB = new Database();
+        CURRENT = DB.getCurrentPlayer();
+        if (CURRENT == null) {
+            throw new NullPointerException("Current player is null.");
+        }
+        money = CURRENT.getMoney();
+
         initMap();
         initComps();
 
@@ -186,20 +187,20 @@ public class Betting extends javax.swing.JPanel {
                 if (x >= minx && x <= maxx && y >= miny && y <= maxy) {
                     if (currentWager <= money) {
                         money -= currentWager;
-                        lblCash.setText("Current money: \u20ac" + deciForm.format(money));
-                        bets.add(new Bet(click.getMultiplier(), click.getNumbers(), currentWager, new JLabel()));
+                        lblCash.setText("Current money: \u20ac" + DECI_FORM.format(money));
+                        BETS.add(new Bet(click.getMultiplier(), click.getNumbers(), currentWager, new JLabel()));
                         lblTotalWager.setText("Total wager: \u20ac" + calculateWager());
-                        bets.get(bets.size() - 1).getLabel().addMouseListener(new MouseAdapter() {
+                        BETS.get(BETS.size() - 1).getLabel().addMouseListener(new MouseAdapter() {
                             @Override
                             public void mousePressed(MouseEvent e) {
                                 layer.remove((JLabel) e.getSource());
                                 layer.repaint();
-                                for (int i = bets.size() - 1; i > -1; i--) {
+                                for (int i = BETS.size() - 1; i > -1; i--) {
                                     Bet bet;
-                                    if ((bet = bets.get(i)).getLabel() == (JLabel) e.getSource()) {
+                                    if ((bet = BETS.get(i)).getLabel() == (JLabel) e.getSource()) {
                                         money += bet.getWager();
-                                        lblCash.setText("Current money: \u20ac" + deciForm.format(money));
-                                        bets.remove(bet);
+                                        lblCash.setText("Current money: \u20ac" + DECI_FORM.format(money));
+                                        BETS.remove(bet);
                                         lblTotalWager.setText("Total wager: \u20ac" + calculateWager());
                                     }
                                 }
@@ -207,8 +208,8 @@ public class Betting extends javax.swing.JPanel {
                         });
                         int placeX = (click.getMinX() + click.getMaxX()) / 2 - 15;
                         int placeY = (click.getMinY() + click.getMaxY()) / 2 - 15;
-                        bets.get(bets.size() - 1).getLabel().setBounds(placeX, placeY, 30, 30);
-                        JLabel label = bets.get(bets.size() - 1).getLabel();
+                        BETS.get(BETS.size() - 1).getLabel().setBounds(placeX, placeY, 30, 30);
+                        JLabel label = BETS.get(BETS.size() - 1).getLabel();
                         String img;
                         switch (currentWager) {
                             case 10:
@@ -228,8 +229,8 @@ public class Betting extends javax.swing.JPanel {
                                 break;
                         }
                         label.setIcon(new ImageIcon(getClass().getResource(img)));
-                        layer.add(bets.get(bets.size() - 1).getLabel());
-                        layer.moveToFront(bets.get(bets.size() - 1).getLabel());
+                        layer.add(BETS.get(BETS.size() - 1).getLabel());
+                        layer.moveToFront(BETS.get(BETS.size() - 1).getLabel());
                     } else {
                         JOptionPane.showMessageDialog(null, "Not enough money left!",
                                 "Too bad", JOptionPane.ERROR_MESSAGE);
@@ -249,10 +250,10 @@ public class Betting extends javax.swing.JPanel {
     private String calculateWager() {
         String Wager;
         wager = 0;
-        for (Bet bet : bets) {
+        for (Bet bet : BETS) {
             wager += bet.getWager();
         }
-        Wager = deciForm.format(wager);
+        Wager = DECI_FORM.format(wager);
         return Wager;
     }
 
@@ -265,11 +266,11 @@ public class Betting extends javax.swing.JPanel {
      *
      * @return Payout of the played game, returns 0 if the player lost the bet
      */
-    private double getPayout() {
-        double pay = 0;
+    private int getPayout() {
+        int pay = 0;
         random = (int) (Math.random() * 37);
 
-        for (Bet bet : bets) {
+        for (Bet bet : BETS) {
             int[] numbers = bet.getNumbers();
             for (int number : numbers) {
                 if (number == random) {
@@ -328,7 +329,7 @@ public class Betting extends javax.swing.JPanel {
         double angle = 0.0;
         double addAngle = 360.0 / 37.0;
         for (int i = numbers.length - 1; i >= 0; i--) {
-            angleMap.put(numbers[i], angle);
+            ANGLE_MAP.put(numbers[i], angle);
             angle += addAngle;
         }
     }
@@ -347,7 +348,7 @@ public class Betting extends javax.swing.JPanel {
         lblTotalWager.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
         lblCurrentWager = new JLabel("Current wager: \u20ac"
-                + deciForm.format(currentWager));
+                + DECI_FORM.format(currentWager));
         lblCurrentWager.setBounds(540, 5, 250, 20);
         lblCurrentWager.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblCurrentWager.setForeground(Color.WHITE);
@@ -359,13 +360,13 @@ public class Betting extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (isActive) {
-                    if (bets.size() > 0) {
-                        Player.getCurrentPlayer().addRoulettePlayed();
+                    if (BETS.size() > 0) {
+                        CURRENT.addRoulettePlayed();
                         setActive(false);
                         double pay = getPayout();
                         money += pay;
-                        Player.getCurrentPlayer().setMoney(money);
-                        double angle = (Math.toRadians((1440 + angleMap.get(random)) * 10));
+                        CURRENT.setMoney(money);
+                        double angle = (Math.toRadians((1440 + ANGLE_MAP.get(random)) * 10));
                         wheelFrame = new JDialog();
                         JLabel background = new JLabel(new ImageIcon(getClass().getResource("/Img/backgroundWheel.png")));
 
@@ -374,23 +375,27 @@ public class Betting extends javax.swing.JPanel {
                         wheelFrame.addWindowListener(new WindowAdapter() {
                             @Override
                             public void windowClosing(WindowEvent e) {
-                                Result result = new Result(random, pay, wager);
-                                lblCash.setText("Current money: \u20ac" + deciForm.format(money));
-                                result.addWindowListener(new WindowAdapter() {
-                                    @Override
-                                    public void windowClosing(WindowEvent e) {
-                                        for (Bet bet : bets) {
-                                            layer.remove(bet.getLabel());
+                                try {
+                                    Result result = new Result(random, pay, wager);
+                                    lblCash.setText("Current money: \u20ac" + DECI_FORM.format(money));
+                                    result.addWindowListener(new WindowAdapter() {
+                                        @Override
+                                        public void windowClosing(WindowEvent e) {
+                                            for (Bet bet : BETS) {
+                                                layer.remove(bet.getLabel());
+                                            }
+                                            setActive(true);
+                                            layer.repaint();
+                                            BETS.clear();
+                                            wager = 0;
+                                            lblTotalWager.setText("Total wager: \u20ac" + DECI_FORM.format(wager));
+                                            result.dispose();
                                         }
-                                        setActive(true);
-                                        layer.repaint();
-                                        bets.clear();
-                                        wager = 0;
-                                        lblTotalWager.setText("Total wager: \u20ac" + deciForm.format(wager));
-                                        result.dispose();
-                                    }
-                                });
-                                wheelFrame.dispose();
+                                    });
+                                    wheelFrame.dispose();
+                                } catch (IOException ex) {
+                                    Logger.getLogger(Betting.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             }
                         });
                         wheelFrame.setLayout(new AbsoluteLayout());
@@ -428,14 +433,14 @@ public class Betting extends javax.swing.JPanel {
                 if (isActive) {
                     currentWager = 10;
                     lblCurrentWager.setText("Current wager: \u20ac"
-                            + deciForm.format(currentWager));
+                            + DECI_FORM.format(currentWager));
                     selectChip("red");
                 }
             }
         });
 
         btnBet20 = new JButton(new ImageIcon(getClass().getResource("/Img/chipGreen.png")));
-        btnBet20.setBounds(1107, 112, chipSize, chipSize);
+        btnBet20.setBounds(1107, 112, CHIP_SIZE, CHIP_SIZE);
         btnBet20.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBet20.addMouseListener(new MouseAdapter() {
             @Override
@@ -443,14 +448,14 @@ public class Betting extends javax.swing.JPanel {
                 if (isActive) {
                     currentWager = 20;
                     lblCurrentWager.setText("Current wager: \u20ac"
-                            + deciForm.format(currentWager));
+                            + DECI_FORM.format(currentWager));
                     selectChip("green");
                 }
             }
         });
 
         btnBet50 = new JButton(new ImageIcon(getClass().getResource("/Img/chipBlue.png")));
-        btnBet50.setBounds(957, 212, chipSize, chipSize);
+        btnBet50.setBounds(957, 212, CHIP_SIZE, CHIP_SIZE);
         btnBet50.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBet50.addMouseListener(new MouseAdapter() {
             @Override
@@ -458,14 +463,14 @@ public class Betting extends javax.swing.JPanel {
                 if (isActive) {
                     currentWager = 50;
                     lblCurrentWager.setText("Current wager: \u20ac"
-                            + deciForm.format(currentWager));
+                            + DECI_FORM.format(currentWager));
                     selectChip("blue");
                 }
             }
         });
 
         btnBet100 = new JButton(new ImageIcon(getClass().getResource("/Img/chipBlack.png")));
-        btnBet100.setBounds(1157, 212, chipSize, chipSize);
+        btnBet100.setBounds(1157, 212, CHIP_SIZE, CHIP_SIZE);
         btnBet100.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBet100.addMouseListener(new MouseAdapter() {
             @Override
@@ -473,14 +478,14 @@ public class Betting extends javax.swing.JPanel {
                 if (isActive) {
                     currentWager = 100;
                     lblCurrentWager.setText("Current wager: \u20ac"
-                            + deciForm.format(currentWager));
+                            + DECI_FORM.format(currentWager));
                     selectChip("black");
                 }
             }
         });
 
         btnBetCustom = new JButton(new ImageIcon(getClass().getResource("/Img/chipWhite.png")));
-        btnBetCustom.setBounds(1057, 212, chipSize, chipSize);
+        btnBetCustom.setBounds(1057, 212, CHIP_SIZE, CHIP_SIZE);
         btnBetCustom.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBetCustom.addMouseListener(new MouseAdapter() {
             @Override
@@ -491,9 +496,9 @@ public class Betting extends javax.swing.JPanel {
                     Box box = new Box(BoxLayout.PAGE_AXIS);
                     JPanel panel = new JPanel(new BorderLayout());
                     JLabel betLabel = new JLabel("Enter your wager:");
-                    betLabel.setFont(standardFont);
+                    betLabel.setFont(STANDARD_FONT);
                     JTextField txt = new JTextField(Long.toString(currentWager), 10);
-                    txt.setFont(standardFont);
+                    txt.setFont(STANDARD_FONT);
                     betLabel.setAlignmentX(LEFT_ALIGNMENT);
                     txt.setAlignmentX(LEFT_ALIGNMENT);
                     box.add(betLabel);
@@ -519,7 +524,7 @@ public class Betting extends javax.swing.JPanel {
                                 if (customWager > 0) {
                                     currentWager = customWager;
                                     lblCurrentWager.setText("Current wager: \u20ac"
-                                            + deciForm.format(currentWager));
+                                            + DECI_FORM.format(currentWager));
                                     selectChip("white");
                                 } else {
                                     throw new NumberFormatException();
@@ -538,7 +543,7 @@ public class Betting extends javax.swing.JPanel {
             }
         });
 
-        lblCash = new JLabel("Current money: \u20ac" + deciForm.format(money));
+        lblCash = new JLabel("Current money: \u20ac" + DECI_FORM.format(money));
         lblCash.setBounds(270, 5, 250, 20);
         lblCash.setForeground(Color.WHITE);
         lblCash.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -640,13 +645,25 @@ public class Betting extends javax.swing.JPanel {
         int x = evt.getPoint().x;
         int y = evt.getPoint().y;
 
-        if (x >= mouseXMin && x <= mouseXMax && y >= mouseYMin && y <= mouseYMax) {
+        if (x >= MOUSE_X_MIN && x <= MOUSE_X_MAX && y >= MOUSE_Y_MIN && y <= MOUSE_Y_MAX) {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
     }//GEN-LAST:event_formMouseMoved
 
+    //Swing components
+    private JLabel lblTotalWager;
+    private JLabel lblCash;
+    private JLabel lblCurrentWager;
+    private JLabel lblChooseWager;
+    private JButton btnBet10;
+    private JButton btnBet20;
+    private JButton btnBet50;
+    private JButton btnBet100;
+    private JButton btnBetCustom;
+    private JButton btnPlay;
+    private JButton btnBack;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

@@ -6,6 +6,7 @@
 package Views.Roulette;
 
 import Object.Shared.Player;
+import Resources.Java.Shared.Database;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -13,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -25,29 +27,42 @@ import javax.swing.JLabel;
  */
 public class Result extends javax.swing.JDialog {
 
-    private final Font standardFont;
-    private final DecimalFormat deciForm = new DecimalFormat("0.00");
+    private final Font STANDARD_FONT;
+    private final DecimalFormat DECI_FORM = new DecimalFormat("0.00");
 
     /**
      * Creates new form Result
      */
-    public Result() {
-        this.standardFont = new Font("Tahoma", Font.PLAIN, 16);
-        setTitle("Result");
-        setIconImage(new ImageIcon(getClass().getResource("/Img/windowIcon.png")).getImage());
-//        setUndecorated(true);
+    private Result() {
+        this.STANDARD_FONT = new Font("Tahoma", Font.PLAIN, 16);
         initComponents();
     }
 
     /**
-     * Create Result object 
-     * 
+     * Create Result object
+     *
      * @param random The randomly picked roulette result number
      * @param gain The gain made by the player this bet
      * @param wager The total wager the player bet
      */
-    public Result(int random, double gain, double wager) {
+    public Result(int random, double gain, double wager) throws IOException {
         this();
+        initComps(random, gain, wager);
+    }
+
+    /**
+     * Throw closing event for the displayed frame
+     */
+    private void proceed() {
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    }
+
+    private void initComps(int random, double gain, double wager) throws IOException {
+        setTitle("Result");
+        setIconImage(new ImageIcon(getClass().getResource("/Img/windowIcon.png")).getImage());
+
+        Database db = new Database();
+        Player current = db.getCurrentPlayer();
 
         JLabel lblNumberImg = new JLabel(new ImageIcon(getClass().getResource("/Img/wheel" + random + ".png")));
         JLabel lblNumber = new JLabel("The winning number is: " + random + "!");
@@ -56,23 +71,23 @@ public class Result extends javax.swing.JDialog {
 
         lblNumberImg.setBounds(173, 15, 54, 82);
         if (gain - wager > 0) {
-            Player.getCurrentPlayer().addRouletteWon();
+            current.addRouletteWon();
             lblNumberImg.setBorder(BorderFactory.createLineBorder(Color.GREEN, 2));
-            lblPayout.setText("You earned \u20ac" + deciForm.format(gain - wager) + "!");
+            lblPayout.setText("You earned \u20ac" + DECI_FORM.format(gain - wager) + "!");
         } else if (gain - wager == 0) {
             lblNumberImg.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
             lblPayout.setText("You made no profit this game..");
         } else {
             lblNumberImg.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
-            lblPayout.setText("You lost \u20ac" + deciForm.format(wager - gain) + "...");
+            lblPayout.setText("You lost \u20ac" + DECI_FORM.format(wager - gain) + "...");
         }
 
         lblNumber.setBounds(100, 127, 200, 20);
-        lblNumber.setFont(standardFont);
+        lblNumber.setFont(STANDARD_FONT);
         lblNumber.setForeground(Color.WHITE);
 
         lblPayout.setBounds(100, 167, 230, 20);
-        lblPayout.setFont(standardFont);
+        lblPayout.setFont(STANDARD_FONT);
         lblPayout.setForeground(Color.WHITE);
 
         btnContinue.addMouseListener(new MouseAdapter() {
@@ -81,10 +96,10 @@ public class Result extends javax.swing.JDialog {
                 proceed();
             }
         });
-        
-        btnContinue.addActionListener(new ActionListener(){
+
+        btnContinue.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 proceed();
             }
         });
@@ -104,13 +119,6 @@ public class Result extends javax.swing.JDialog {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-    }
-
-    /**
-     * Throw closing event for the displayed frame
-     */
-    private void proceed() {
-        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
     /**
@@ -166,5 +174,3 @@ public class Result extends javax.swing.JDialog {
     private javax.swing.JLayeredPane layer;
     // End of variables declaration//GEN-END:variables
 }
-
-

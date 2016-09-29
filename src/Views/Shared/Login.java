@@ -6,6 +6,7 @@
 package Views.Shared;
 
 import Object.Shared.Player;
+import Resources.Java.Shared.Database;
 import static Views.Shared.Main.convertSize;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -15,7 +16,10 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -34,44 +38,107 @@ import javax.swing.event.DocumentListener;
  */
 public class Login extends javax.swing.JPanel {
 
-    private final JButton btnLogin;
-    private final JButton btnNewUser;
-    private final JButton btnRegister;
-    private final JButton btnBack;
-    private JButton btnExit;
-    private final JTextField txtLgnName;
-    private final JPasswordField txtLgnPass;
-    private final JTextField txtNewName;
-    private final JPasswordField txtNewPass;
-    private final JTextField txtNewMoney;
-    private final JLabel lblUsername;
-    private final JLabel lblPassword;
-    private final JLabel lblMoney;
-    private final JLabel lblNameError;
-    private final JLabel lblPassError;
-    private final JCheckBox chkRemember;
-    private final Font standardFont = new Font("Tahoma", Font.PLAIN, 16);
+    private final Font STANDARD_FONT = new Font("Tahoma", Font.PLAIN, 16);
+
     private boolean legitName = true;
     private boolean register = true;
+    private Database DB = null;
 
     /**
      * Creates new form Login
+     *
+     * @throws java.io.IOException
      */
-    public Login() {
+    public Login() throws IOException {
         initComponents();
-        String[] remember = Main.getRemebered();
+        initComps();
+    }
+
+    private void login(String username, char[] password) throws IOException {
+        if (username.isEmpty() || password.length == 0) {
+            JOptionPane.showMessageDialog(null, "Enter a username and password!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            StringBuilder builder = new StringBuilder();
+            for (char b : password) {
+                builder.append(b);
+            }
+            String pass = builder.toString();
+
+            List<Player> players = DB.getPlayers();
+            for (Player player : players) {
+                if (player.getUsername().equals(username)
+                        && player.getPassword().equals(pass)) {
+                    DB.putCurrentPlayer(player);
+                    if (chkRemember.isSelected()) {
+                        DB.putRemCred(player);
+                    } else {
+                        DB.removeRemCred();
+                    }
+                }
+            }
+            if (DB.getCurrentPlayer() != null) {
+                Main.setPanel(new Startpage());
+            } else {
+                JOptionPane.showMessageDialog(null, "Invalid combination of "
+                        + "username and password!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void register(String username, char[] password, String money) throws IOException {
+        if (username.isEmpty() || password.length == 0 || money.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Enter a username, password and "
+                    + "amount of money!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            StringBuilder builder = new StringBuilder();
+            for (char c : password) {
+                builder.append(c);
+            }
+            String pass = builder.toString();
+            try {
+                money = money.replace(",", ".");
+                int cash = Integer.parseInt(money);
+                if (cash <= 0) {
+                    throw new NumberFormatException();
+                }
+                DB.addPlayer(Player.newPlayer(username, pass, cash));
+                login(username, password);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Enter a valid amount of "
+                        + "money!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void checkRegister() {
+        register = !(lblNameError.isVisible() || lblPassError.isVisible());
+    }
+
+    private void initComps() throws IOException {
+        DB = new Database();
+        String[] remember = DB.getRemCred();
         Action loginAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                login(txtLgnName.getText(), txtLgnPass.getPassword());
+                try {
+                    login(txtLgnName.getText(), txtLgnPass.getPassword());
+                } catch (IOException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         };
 
         Action registerAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                register(txtNewName.getText(), txtNewPass.getPassword(),
-                        txtNewMoney.getText());
+                try {
+                    register(txtNewName.getText(), txtNewPass.getPassword(),
+                            txtNewMoney.getText());
+                } catch (IOException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         };
 
@@ -84,10 +151,10 @@ public class Login extends javax.swing.JPanel {
         btnBack = new JButton(
                 new ImageIcon(getClass().getResource("/Img/btnBack.png")));
         txtLgnName = new JTextField();
-        txtLgnName.setFont(standardFont);
+        txtLgnName.setFont(STANDARD_FONT);
         txtLgnPass = new JPasswordField();
         chkRemember = new JCheckBox("Onthoud mij");
-        chkRemember.setFont(standardFont);
+        chkRemember.setFont(STANDARD_FONT);
         chkRemember.setForeground(new Color(255, 212, 0));
         chkRemember.setOpaque(false);
         if (remember != null) {
@@ -96,11 +163,11 @@ public class Login extends javax.swing.JPanel {
             chkRemember.setSelected(true);
         }
         txtNewName = new JTextField();
-        txtNewName.setFont(standardFont);
+        txtNewName.setFont(STANDARD_FONT);
         txtNewName.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                for (Player p : Main.getPlayers()) {
+                for (Player p : DB.getPlayers()) {
                     if (p.getUsername().equals(txtNewName.getText())) {
                         legitName = false;
                         System.out.println("False");
@@ -212,23 +279,23 @@ public class Login extends javax.swing.JPanel {
 
         });
         txtNewMoney = new JTextField();
-        txtNewMoney.setFont(standardFont);
+        txtNewMoney.setFont(STANDARD_FONT);
 
         lblUsername = new JLabel("Username");
-        lblUsername.setFont(standardFont);
+        lblUsername.setFont(STANDARD_FONT);
         lblUsername.setForeground(Color.WHITE);
         lblPassword = new JLabel("Password");
-        lblPassword.setFont(standardFont);
+        lblPassword.setFont(STANDARD_FONT);
         lblPassword.setForeground(Color.WHITE);
         lblMoney = new JLabel("Amount of money");
-        lblMoney.setFont(standardFont);
+        lblMoney.setFont(STANDARD_FONT);
         lblMoney.setForeground(Color.WHITE);
         lblNameError = new JLabel("'" + txtNewName.getText() + "' already exists!");
-        lblNameError.setFont(standardFont);
+        lblNameError.setFont(STANDARD_FONT);
         lblNameError.setForeground(new Color(255, 179, 0));
         lblNameError.setVisible(false);
         lblPassError = new JLabel();
-        lblPassError.setFont(standardFont);
+        lblPassError.setFont(STANDARD_FONT);
         lblPassError.setForeground(new Color(255, 179, 0));
         lblPassError.setVisible(false);
 
@@ -236,7 +303,11 @@ public class Login extends javax.swing.JPanel {
         btnLogin.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                login(txtLgnName.getText(), txtLgnPass.getPassword());
+                try {
+                    login(txtLgnName.getText(), txtLgnPass.getPassword());
+                } catch (IOException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -271,8 +342,12 @@ public class Login extends javax.swing.JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (legitName && register) {
-                    register(txtNewName.getText(), txtNewPass.getPassword(),
-                            txtNewMoney.getText());
+                    try {
+                        register(txtNewName.getText(), txtNewPass.getPassword(),
+                                txtNewMoney.getText());
+                    } catch (IOException ex) {
+                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Check username or password!",
                             "Error", JOptionPane.ERROR_MESSAGE);
@@ -350,92 +425,23 @@ public class Login extends javax.swing.JPanel {
         layer.moveToFront(lblPassword);
         layer.moveToFront(lblNameError);
         layer.moveToFront(lblPassError);
-        
-        initComps();
-
-    }
-
-    private void checkRegister() {
-        register = !(lblNameError.isVisible() || lblPassError.isVisible());
-    }
-
-    private void login(String username, char[] password) {
-        if (username.isEmpty() || password.length == 0) {
-            JOptionPane.showMessageDialog(null, "Enter a username and password!",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            StringBuilder builder = new StringBuilder();
-            for (char b : password) {
-                builder.append(b);
-            }
-            String pass = builder.toString();
-
-            ArrayList<Player> players = Main.getPlayers();
-            for (Player player : players) {
-                if (player.getUsername().equals(username)
-                        && player.getPassword().equals(pass)) {
-                    Player.setCurrentPlayer(player);
-                    if (chkRemember.isSelected()) {
-                        Main.rememberPlayer(player);
-                    } else {
-                        Main.clearRemember();
-                    }
-                }
-            }
-            if (Player.getLoggedIn()) {
-                Main.setPanel(new Startpage());
-            } else {
-                JOptionPane.showMessageDialog(null, "Invalid combination of "
-                        + "username and password!", "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-
-    private void register(String username, char[] password, String money) {
-        if (username.isEmpty() || password.length == 0 || money.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Enter a username, password and "
-                    + "amount of money!", "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            StringBuilder builder = new StringBuilder();
-            for (char c : password) {
-                builder.append(c);
-            }
-            String pass = builder.toString();
-            try {
-                money = money.replace(",", ".");
-                int cash = Integer.parseInt(money);
-                if (cash <= 0) {
-                    throw new NumberFormatException();
-                }
-                Main.addPlayer(Player.newPlayer(username, pass, cash));
-                login(username, password);
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Enter a valid amount of "
-                        + "money!", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-    
-    private void initComps(){
         btnExit = new JButton(new ImageIcon(getClass().getResource("/Img/btnExit.png")));
         btnExit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnExit.setFocusable(false);
         btnExit.setPressedIcon(new ImageIcon(getClass().getResource("/Img/btnExitPressed.png")));
-        btnExit.addMouseListener(new MouseAdapter(){
-           @Override
-           public void mouseReleased(MouseEvent e){
-               Main.exit();
-           }
+        btnExit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                Main.exit();
+            }
         });
-        
+
         //Bounds
         btnExit.setBounds(convertSize(616), convertSize(10), convertSize(164), convertSize(53));
-        
-       //add
+
+        //add
         layer.add(btnExit);
-        
-        
+
         //Move to front
         layer.moveToFront(btnExit);
     }
@@ -479,6 +485,23 @@ public class Login extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    // Swing components
+    private JButton btnLogin;
+    private JButton btnNewUser;
+    private JButton btnRegister;
+    private JButton btnBack;
+    private JButton btnExit;
+    private JTextField txtLgnName;
+    private JPasswordField txtLgnPass;
+    private JTextField txtNewName;
+    private JPasswordField txtNewPass;
+    private JTextField txtNewMoney;
+    private JLabel lblUsername;
+    private JLabel lblPassword;
+    private JLabel lblMoney;
+    private JLabel lblNameError;
+    private JLabel lblPassError;
+    private JCheckBox chkRemember;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane layer;

@@ -13,17 +13,21 @@ public class CharlottePanel extends javax.swing.JDialog {
 
     /**
      * Creates new form CharlottePanel
+     *
      * @param parent
      * @param modal
      */
-    public CharlottePanel(java.awt.Frame parent, boolean modal) {
+    private CharlottePanel(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
-    
-    public CharlottePanel(){
+
+    public CharlottePanel() {
         this(null, true);
-        
+        initComps();
+    }
+
+    private void initComps() {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
@@ -74,7 +78,7 @@ public class CharlottePanel extends javax.swing.JDialog {
             java.util.logging.Logger.getLogger(CharlottePanel.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+
         //</editor-fold>
 
         /* Create and display the dialog */

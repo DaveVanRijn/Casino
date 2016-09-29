@@ -15,10 +15,10 @@ public class Bet {
     
     private final int multiplier;
     private final int[] numbers;
-    private final double wager;
+    private final int wager;
     private final JLabel label;
     
-    public Bet(int multiplier, int[] numbers, double wager, JLabel label){
+    public Bet(int multiplier, int[] numbers, int wager, JLabel label){
         this.multiplier = multiplier;
         this.numbers = numbers;
         this.wager = wager;
@@ -33,7 +33,7 @@ public class Bet {
         return numbers;
     }
 
-    public double getWager() {
+    public int getWager() {
         return wager;
     }
     

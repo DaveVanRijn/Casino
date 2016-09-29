@@ -11,24 +11,28 @@ package Object.Blackjack;
  */
 public class SplitGame {
     
-    private CardList firstSplit;
-    private CardList secondSplit;
-    private final CardList[] splits;
-    private long wager;
-    private int multiplier;
     public static final int FIRST_SPLIT = 0;
     public static final int SECOND_SPLIT = 1;
     
-    public SplitGame(Card first, Card second, long wager){
+    private final CardList[] SPLITS;
+    
+    private CardList firstSplit;
+    private CardList secondSplit;
+    private int wager;
+    private int multiplier;
+    
+    public SplitGame(Card first, Card second, int wager){
         firstSplit.add(first);
         secondSplit.add(second);
-        splits = new CardList[2];
-        splits[FIRST_SPLIT] = firstSplit;
-        splits[SECOND_SPLIT] = secondSplit;
+        SPLITS = new CardList[2];
+        SPLITS[FIRST_SPLIT] = firstSplit;
+        SPLITS[SECOND_SPLIT] = secondSplit;
+        
+        this.wager = wager;
     }
     
     public boolean hasSevenCards(int split){
-        return splits[split].getValue() <= 21 && splits[split].size() == 7;
+        return SPLITS[split].getValue() <= 21 && SPLITS[split].size() == 7;
     }
     
     public int[] getValues(){
@@ -36,7 +40,7 @@ public class SplitGame {
     }
     
     public int getValue(int split){
-        return splits[split].getValue();
+        return SPLITS[split].getValue();
     }
     
     /**
@@ -47,11 +51,11 @@ public class SplitGame {
      * event does occur
      */
     public boolean addCard(Card card, int split){
-        splits[split].add(card);
-        return splits[split].getValue() <= 21 && splits[split].size() < 7;
+        SPLITS[split].add(card);
+        return SPLITS[split].getValue() <= 21 && SPLITS[split].size() < 7;
     }
     
-    public long getPayout(){
+    public int getPayout(){
         return wager * multiplier;
     }
     

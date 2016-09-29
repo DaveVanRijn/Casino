@@ -6,10 +6,7 @@
  */
 package Views.Shared;
 
-import Object.Shared.Player;
-import Views.Shared.Login;
 import Resources.Java.Shared.EncryptionKey;
-import Views.Shared.CharlottePanel;
 import Exception.Shared.CharNotSupportedException;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -20,15 +17,9 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,54 +37,31 @@ import javax.swing.plaf.FontUIResource;
  */
 public class Main extends javax.swing.JFrame {
 
+    private final ArrayList<JPanel> PANELS;
+    private final Font STANDARD_FONT = new Font("Tahoma", Font.PLAIN, 16);
+
     private static Main mainframe;
-    private final ArrayList<JPanel> panels;
     private static JFrame popup;
-    private static ArrayList<Player> players = new ArrayList<>();
-    private final File data = new File("data.dat");
-    ObjectInputStream in;
-    ObjectOutputStream out;
-    private final Font standardFont = new Font("Tahoma", Font.PLAIN, 16);
-    private static String rememberName = null;
-    private static String rememberPass = null;
     private static EncryptionKey key;
     private static double SIZE_FACTOR;
 
     /**
      * Creates new form Main
      */
-    public Main() {
+    public Main() throws IOException {
         setUndecorated(true);
         key = new EncryptionKey();
         setSizeFactor();
-        UIManager.put("OptionPane.messageFont", new FontUIResource(standardFont));
-        UIManager.put("OptionPane.buttonFont", new FontUIResource(standardFont));
+        UIManager.put("OptionPane.messageFont", new FontUIResource(STANDARD_FONT));
+        UIManager.put("OptionPane.buttonFont", new FontUIResource(STANDARD_FONT));
+
         initComponents();
         setIconImage(new ImageIcon(getClass().getResource("/Img/windowIcon.png")).getImage());
-        try {
-            //Initialize the data
-            if (!data.createNewFile()) {
-                read();
-            } else {
-                players = new ArrayList<>();
-                rememberName = null;
-                rememberPass = null;
-                write();
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        panels = new ArrayList<>();
         JPanel panel = new Login();
-        panels.add(panel);
+        PANELS = new ArrayList<>();
+        PANELS.add(panel);
         pnlMain.setLayout(new BorderLayout());
         pnlMain.add(panel, BorderLayout.CENTER);
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                write();
-            }
-        });
         setTitle("Casino");
         pack();
         setLocationRelativeTo(null);
@@ -113,7 +81,7 @@ public class Main extends javax.swing.JFrame {
     public static void setPanel(Object o) {
         JPanel panel = (JPanel) o;
         mainframe.pnlMain.removeAll();
-        mainframe.panels.add(panel);
+        mainframe.PANELS.add(panel);
         mainframe.pnlMain.add(panel);
         mainframe.pack();
         mainframe.setLocationRelativeTo(null);
@@ -124,9 +92,10 @@ public class Main extends javax.swing.JFrame {
      */
     public static void setLastPanel() {
         mainframe.pnlMain.removeAll();
-        mainframe.panels.remove(mainframe.panels.size() - 1);
-        JPanel panel = mainframe.panels.get(mainframe.panels.size() - 1);
-        mainframe.panels.remove(mainframe.panels.size() - 1);
+
+        mainframe.PANELS.remove(mainframe.PANELS.size() - 1);
+        JPanel panel = mainframe.PANELS.get(mainframe.PANELS.size() - 1);
+        mainframe.PANELS.remove(mainframe.PANELS.size() - 1);
         setPanel(panel);
         mainframe.pnlMain.repaint();
     }
@@ -137,10 +106,11 @@ public class Main extends javax.swing.JFrame {
      * @param o The instance of the panel that is to be displayed
      */
     public static void setPopup(Object o) {
+        JPanel panel = (JPanel) o;
+        
         popup = new JFrame();
         popup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         popup.removeAll();
-        JPanel panel = (JPanel) o;
         popup.add(panel);
         popup.pack();
         popup.setLocationRelativeTo(null);
@@ -155,54 +125,8 @@ public class Main extends javax.swing.JFrame {
         }
     }
 
-    /**
-     * Get a list of the players of this game
-     *
-     * @return The list of players of this game
-     */
-    public static ArrayList<Player> getPlayers() {
-        return players;
-    }
-
-    /**
-     * Add a player to the players list
-     *
-     * @param p The player
-     */
-    public static void addPlayer(Player p) {
-        players.add(p);
-    }
-
-    /**
-     * Remove a player from the game
-     *
-     * @param p The player
-     */
-    public static void removePlayer(Player p) {
-        players.remove(p);
-    }
-
     public static void changeTitle(String title) {
         mainframe.setTitle(title);
-    }
-
-    public static void rememberPlayer(Player player) {
-        rememberName = player.getUsername();
-        rememberPass = player.getPassword();
-    }
-
-    public static String[] getRemebered() {
-        if (checkRemember()) {
-            return new String[]{rememberName, rememberPass};
-        }
-        return null;
-    }
-
-    public static void clearRemember() {
-        if (checkRemember()) {
-            rememberName = null;
-            rememberPass = null;
-        }
     }
 
     public static String encrypt(String s) {
@@ -277,59 +201,6 @@ public class Main extends javax.swing.JFrame {
         }
     }
 
-    private static boolean checkRemember() {
-        return (rememberName != null && rememberPass != null);
-    }
-
-    private static void read() {
-        ObjectInputStream input = null;
-        try {
-            input = new ObjectInputStream(new FileInputStream(new File("data.dat")));
-            players = (ArrayList<Player>) input.readObject();
-            String remember = (String) input.readObject();
-            if (!remember.equals("empty")) {
-                rememberName = decrypt(remember.split(":")[0]);
-                rememberPass = decrypt(remember.split(":")[1]);
-            }
-        } catch (IOException | ClassNotFoundException ex) {
-            players = new ArrayList<>();
-            rememberName = null;
-            rememberPass = null;
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-    }
-
-    private static void write() {
-        ObjectOutputStream output = null;
-        try {
-            output = new ObjectOutputStream(new FileOutputStream(new File("data.dat")));
-            String remember = "empty";
-            if (rememberName != null && rememberPass != null) {
-                remember = encrypt(rememberName) + ":" + encrypt(rememberPass);
-            }
-            output.writeObject(players);
-            output.writeObject(remember);
-        } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if (output != null) {
-                try {
-                    output.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -381,7 +252,11 @@ public class Main extends javax.swing.JFrame {
         }
 
         EventQueue.invokeLater(() -> {
-            mainframe = new Main();
+            try {
+                mainframe = new Main();
+            } catch (IOException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
     }
 

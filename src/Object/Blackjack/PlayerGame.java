@@ -12,11 +12,11 @@ package Object.Blackjack;
 public class PlayerGame {
     
     private final CardList cards;
-    private final long wager;
+    private int wager;
     private int multiplier;
     private boolean blackjack;
     
-    public PlayerGame(Card first, Card second, long wager){
+    public PlayerGame(Card first, Card second, int wager){
         cards = new CardList();
         cards.add(first);
         cards.add(second);
@@ -55,7 +55,7 @@ public class PlayerGame {
         return cards.remove(cards.indexOf(card));
     }
     
-    public long getPayout(){
+    public int getPayout(){
         return wager * multiplier;
     }
     

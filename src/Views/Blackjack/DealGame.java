@@ -17,20 +17,12 @@ import javax.swing.JLabel;
  * @author Dave van Rijn, Student 500714558, Klas IS202
  */
 public class DealGame extends javax.swing.JPanel {
-
-    private JLabel lblPlayer;
-    private JLabel lblDealer;
-    private JLabel lblSplit;
-    private JButton btnHit;
-    private JButton btnSplit;
-    private JButton btnDouble;
-    private JButton btnStop;
     
     private CardList cards;
-    private final CardList pickedCards;
-    private final CardList playerCards;
-    private final CardList splitCards;
-    private final CardList dealerCards;
+    private final CardList PICKED_CARDS;
+    private final CardList PLAYER_CARDS;
+    private final CardList SPLIT_CARDS;
+    private final CardList DEALER_CARDS;
     
     private boolean sevenCards;
     private boolean splitSevenCards;
@@ -40,19 +32,21 @@ public class DealGame extends javax.swing.JPanel {
     private boolean splitTooMuch;
     private boolean dealerTooMuch;
     
-    private double wager;
+    private int wager;
     /**
      * Creates new form DealGame
      */
-    public DealGame() {
+    public DealGame(int wager) {
         initComponents();
         initComps();
         
+        this.wager = wager;
+        
         cards = AllCards.getShuffledCards();
-        pickedCards = new CardList();
-        playerCards = new CardList();
-        splitCards = new CardList();
-        dealerCards = new CardList();
+        PICKED_CARDS = new CardList();
+        PLAYER_CARDS = new CardList();
+        SPLIT_CARDS = new CardList();
+        DEALER_CARDS = new CardList();
     }
     
     private void initComps(){
@@ -62,11 +56,15 @@ public class DealGame extends javax.swing.JPanel {
         layer.moveToFront(background);
     }
     
+    private void doubleBet(){
+        wager *= 2;
+    }
+    
     private void clearGame(){
-        pickedCards.clear();
-        playerCards.clear();
-        splitCards.clear();
-        dealerCards.clear();
+        PICKED_CARDS.clear();
+        PLAYER_CARDS.clear();
+        SPLIT_CARDS.clear();
+        DEALER_CARDS.clear();
         cards = AllCards.getShuffledCards();
     }
 
@@ -111,7 +109,15 @@ public class DealGame extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-
+    // Swing components
+    private JLabel lblPlayer;
+    private JLabel lblDealer;
+    private JLabel lblSplit;
+    private JButton btnHit;
+    private JButton btnSplit;
+    private JButton btnDouble;
+    private JButton btnStop;
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel background;
     private javax.swing.JLayeredPane layer;

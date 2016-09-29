@@ -6,11 +6,12 @@
 package Views.Shared;
 
 import Object.Shared.Player;
-import Views.Shared.Main;
+import Resources.Java.Shared.Database;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -24,34 +25,33 @@ import javax.swing.JTextField;
  */
 public class PlayerPage extends javax.swing.JPanel {
 
-    private final JTextField txtUsername;
-    private final JPasswordField txtPassword;
-    private final JTextField txtMoney;
-    private final JButton btnEdit;
-    private final JButton btnBack;
-    private final JButton btnSave;
-    private final JLabel lblUsername;
-    private final JLabel lblPassword;
-    private final JLabel lblMoney;
-    private final JLabel lblRoulettePlayed;
-    private final JLabel lblRoulettePlayedValue;
-    private final JLabel lblRouletteWon;
-    private final JLabel lblRouletteWonValue;
-    private final JLabel lblRoulettePercentageWon;
-    private final JLabel lblRoulettePercentageWonValue;
+    private final Font STANDARD_FONT = new Font("Tahoma", Font.PLAIN, 16);
+    
     private boolean editing = false;
-    private final Font standardFont = new Font("Tahoma", Font.PLAIN, 16);
 
     /**
      * Creates new form PlayerPage
+     *
+     * @throws java.io.IOException
      */
-    public PlayerPage() {
+    public PlayerPage() throws IOException {
         initComponents();
+        initComps();
+    }
+    
+    private void initComps() throws IOException{
+        Database db = new Database();
+
+        Player current = db.getCurrentPlayer();
+
+        if (current == null) {
+            throw new NullPointerException("Current player is null.");
+        }
 
         layer.moveToFront(lblBackground);
-        txtUsername = new JTextField(Player.getCurrentPlayer().getUsername());
-        txtPassword = new JPasswordField(Player.getCurrentPlayer().getPassword());
-        txtMoney = new JTextField(Long.toString(Player.getCurrentPlayer().getMoney()));
+        txtUsername = new JTextField(current.getUsername());
+        txtPassword = new JPasswordField(current.getPassword());
+        txtMoney = new JTextField(Long.toString(current.getMoney()));
         btnEdit = new JButton(new ImageIcon(getClass().getResource("/Img/btnEdit.png")));
         btnBack = new JButton(new ImageIcon(getClass().getResource("/Img/btnBack.png")));
         btnSave = new JButton(new ImageIcon(getClass().getResource("/Img/btnSave.png")));
@@ -59,36 +59,35 @@ public class PlayerPage extends javax.swing.JPanel {
         lblPassword = new JLabel("Password");
         lblMoney = new JLabel("Amount of money");
         lblRoulettePlayed = new JLabel("Number of Roulette games played");
-        lblRoulettePlayedValue = new JLabel(Integer.toString(
-                Player.getCurrentPlayer().getRoulettePlayed()));
+        lblRoulettePlayedValue = new JLabel(Integer.toString(current
+                .getRoulettePlayed()));
         lblRouletteWon = new JLabel("Number of Roulette games won");
-        lblRouletteWonValue = new JLabel(Integer.toString(
-                Player.getCurrentPlayer().getRouletteWon()));
+        lblRouletteWonValue = new JLabel(Integer.toString(current.getRouletteWon()));
         lblRoulettePercentageWon = new JLabel("Percentage of Roulette games won");
-        lblRoulettePercentageWonValue = new JLabel(
-                Player.getCurrentPlayer().getRoulettePercentageWon() + "%");
+        lblRoulettePercentageWonValue = new JLabel(current.getRoulettePercentageWon()
+                + "%");
 
-        lblUsername.setFont(standardFont);
+        lblUsername.setFont(STANDARD_FONT);
         lblUsername.setForeground(Color.WHITE);
-        lblPassword.setFont(standardFont);
+        lblPassword.setFont(STANDARD_FONT);
         lblPassword.setForeground(Color.WHITE);
-        lblMoney.setFont(standardFont);
+        lblMoney.setFont(STANDARD_FONT);
         lblMoney.setForeground(Color.WHITE);
-        lblRoulettePlayed.setFont(standardFont);
+        lblRoulettePlayed.setFont(STANDARD_FONT);
         lblRoulettePlayed.setForeground(Color.WHITE);
-        lblRoulettePlayedValue.setFont(standardFont);
+        lblRoulettePlayedValue.setFont(STANDARD_FONT);
         lblRoulettePlayedValue.setForeground(Color.WHITE);
-        lblRouletteWon.setFont(standardFont);
+        lblRouletteWon.setFont(STANDARD_FONT);
         lblRouletteWon.setForeground(Color.WHITE);
-        lblRouletteWonValue.setFont(standardFont);
+        lblRouletteWonValue.setFont(STANDARD_FONT);
         lblRouletteWonValue.setForeground(Color.WHITE);
-        lblRoulettePercentageWon.setFont(standardFont);
+        lblRoulettePercentageWon.setFont(STANDARD_FONT);
         lblRoulettePercentageWon.setForeground(Color.WHITE);
-        lblRoulettePercentageWonValue.setFont(standardFont);
+        lblRoulettePercentageWonValue.setFont(STANDARD_FONT);
         lblRoulettePercentageWonValue.setForeground(Color.WHITE);
-        txtUsername.setFont(standardFont);
-        txtPassword.setFont(standardFont);
-        txtMoney.setFont(standardFont);
+        txtUsername.setFont(STANDARD_FONT);
+        txtPassword.setFont(STANDARD_FONT);
+        txtMoney.setFont(STANDARD_FONT);
 
         btnEdit.addMouseListener(new MouseAdapter() {
             @Override
@@ -139,9 +138,8 @@ public class PlayerPage extends javax.swing.JPanel {
                                 + "password and amount of money!", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                     } else {
-                        Player.getCurrentPlayer().setUsername(username);
-                        Player.getCurrentPlayer().setPassword(password);
-                        Player.getCurrentPlayer().setMoney(money);
+                        current.setPassword(password);
+                        current.setMoney(money);
                         JOptionPane.showMessageDialog(null, "Your account "
                                 + "information has been saved", "Succes",
                                 JOptionPane.INFORMATION_MESSAGE);
@@ -218,7 +216,6 @@ public class PlayerPage extends javax.swing.JPanel {
         layer.moveToFront(txtMoney);
         layer.moveToFront(btnBack);
         layer.moveToFront(btnEdit);
-
     }
 
     /**
@@ -260,7 +257,23 @@ public class PlayerPage extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-
+    // Swing components
+    private JTextField txtUsername;
+    private JPasswordField txtPassword;
+    private JTextField txtMoney;
+    private JButton btnEdit;
+    private JButton btnBack;
+    private JButton btnSave;
+    private JLabel lblUsername;
+    private JLabel lblPassword;
+    private JLabel lblMoney;
+    private JLabel lblRoulettePlayed;
+    private JLabel lblRoulettePlayedValue;
+    private JLabel lblRouletteWon;
+    private JLabel lblRouletteWonValue;
+    private JLabel lblRoulettePercentageWon;
+    private JLabel lblRoulettePercentageWonValue;
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane layer;
     private javax.swing.JLabel lblBackground;

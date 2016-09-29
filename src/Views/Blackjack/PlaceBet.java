@@ -8,6 +8,7 @@ package Views.Blackjack;
 import Views.Shared.Main;
 import static Views.Shared.Main.getImage;
 import Object.Shared.Player;
+import Resources.Java.Shared.Database;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -16,6 +17,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.LinkedList;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -35,32 +37,26 @@ import javax.swing.SwingConstants;
 public class PlaceBet extends javax.swing.JPanel {
 
     private final int BETTING_SCREEN = 0;
+    private final Database DB;
+    private final Player CURRENT;
     private Font STANDARD_FONT;
     
-    private long bet = 0;
-    private long money = Player.getCurrentPlayer().getMoney();
-    private final LinkedList<Long> bets = new LinkedList<>();
+    private int bet = 0;
+    private int money;
+    private final LinkedList<Integer> bets = new LinkedList<>();
     private boolean betPlaced = false;
-
-    private JButton bet10;
-    private JButton bet20;
-    private JButton bet50;
-    private JButton bet100;
-    private JButton betCustom;
-    private JButton btnPlay;
-    private JButton btnRemoveLastBet;
-    private JButton btnRemoveBet;
-    private JButton btnBack;
-    private JLabel lblYourMoney;
-    private JLabel lblCurrentBet;
-    private JLabel lblPlaceBet;
-    private JSeparator sep;
 
     /**
      * Creates new form Game
      */
-    public PlaceBet() {
+    public PlaceBet() throws IOException {
         initComponents();
+        DB = new Database();
+        money = DB.getCurrentPlayer().getMoney();
+        CURRENT = DB.getCurrentPlayer();
+        if(CURRENT == null){
+            throw new NullPointerException("Current player is null.");
+        }
         initComps();
         Main.changeTitle("Blackjack");
     }
@@ -144,6 +140,7 @@ public class PlaceBet extends javax.swing.JPanel {
     }
 
     private void initComps() {
+        Player current = DB.getCurrentPlayer();
         STANDARD_FONT = new Font("Tahoma", Font.PLAIN, Main.convertSize(16));
         
         background.setIcon(new ImageIcon(getImage("backgroundBlackjack")));
@@ -152,7 +149,7 @@ public class PlaceBet extends javax.swing.JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (money >= 10) {
-                    bets.push(10L);
+                    bets.push(10);
                     bet += 10;
                     money -= 10;
                     betPlaced = true;
@@ -171,7 +168,7 @@ public class PlaceBet extends javax.swing.JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (money > - 20) {
-                    bets.push(20L);
+                    bets.push(20);
                     bet += 20;
                     money -= 20;
                     betPlaced = true;
@@ -190,7 +187,7 @@ public class PlaceBet extends javax.swing.JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (money >= 50) {
-                    bets.push(50L);
+                    bets.push(50);
                     bet += 50;
                     money -= 50;
                     betPlaced = true;
@@ -209,7 +206,7 @@ public class PlaceBet extends javax.swing.JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (money >= 100) {
-                    bets.push(100L);
+                    bets.push(100);
                     bet += 100;
                     money -= 100;
                     betPlaced = true;
@@ -227,7 +224,7 @@ public class PlaceBet extends javax.swing.JPanel {
         betCustom.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                long customBet;
+                int customBet;
 
                 Box box = new Box(BoxLayout.PAGE_AXIS);
                 JPanel panel = new JPanel(new BorderLayout());
@@ -265,7 +262,7 @@ public class PlaceBet extends javax.swing.JPanel {
 
                     if (option == JOptionPane.YES_OPTION) {
                         try {
-                            customBet = Long.parseLong(txt.getText());
+                            customBet = Integer.parseInt(txt.getText());
 
                             if (customBet > 0) {
                                 if (customBet <= money) {
@@ -304,7 +301,7 @@ public class PlaceBet extends javax.swing.JPanel {
         btnPlay.addMouseListener(new MouseAdapter(){
             @Override
             public void mousePressed(MouseEvent e){
-                Main.setPanel(new DealGame());
+                Main.setPanel(new DealGame(bet));
             }
         });
         
@@ -358,12 +355,12 @@ public class PlaceBet extends javax.swing.JPanel {
                             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
                             null, null, "No");
                     if (option == JOptionPane.YES_OPTION) {
-                        Player.getCurrentPlayer().setMoney(money);
+                        current.setMoney(money);
                         Main.setLastPanel();
                         Main.changeTitle("Casino");
                     }
                 } else {
-                    Player.getCurrentPlayer().setMoney(money);
+                    current.setMoney(money);
                     Main.setLastPanel();
                     Main.changeTitle("Casino");
                 }
@@ -423,6 +420,19 @@ public class PlaceBet extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private JButton bet10;
+    private JButton bet20;
+    private JButton bet50;
+    private JButton bet100;
+    private JButton betCustom;
+    private JButton btnPlay;
+    private JButton btnRemoveLastBet;
+    private JButton btnRemoveBet;
+    private JButton btnBack;
+    private JLabel lblYourMoney;
+    private JLabel lblCurrentBet;
+    private JLabel lblPlaceBet;
+    private JSeparator sep;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel background;

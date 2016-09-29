@@ -5,10 +5,7 @@
  */
 package Views.Shared;
 
-import Views.Shared.PlayerPage;
-import Object.Shared.Player;
-import Views.Shared.Main;
-import Views.Shared.Login;
+import Resources.Java.Shared.Database;
 import Views.Blackjack.PlaceBet;
 import static Views.Shared.Main.convertSize;
 import static Views.Shared.Main.getImage;
@@ -16,6 +13,9 @@ import Views.Roulette.Betting;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
@@ -28,7 +28,12 @@ public class Startpage extends javax.swing.JPanel {
     /**
      * Creates new form Startpage
      */
-    public Startpage() {
+    public Startpage() throws IOException {
+        initComps();
+    }
+
+    private void initComps() throws IOException {
+        Database DB = new Database();
         initComponents();
         JButton btnRoulette = new JButton(
                 new ImageIcon(getImage("btnRoulette")));
@@ -38,7 +43,7 @@ public class Startpage extends javax.swing.JPanel {
                 new ImageIcon(getImage("btnLogout")));
         JButton btnPlayer = new JButton(
                 new ImageIcon(getImage("btnPlayer")));
-        
+
         btnRoulette.setBounds(convertSize(262), convertSize(180), convertSize(275), convertSize(110));
         btnRoulette.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBlackjack.setBounds(convertSize(262), convertSize(320), convertSize(275), convertSize(110));
@@ -46,43 +51,59 @@ public class Startpage extends javax.swing.JPanel {
         btnLogout.setBounds(convertSize(635), convertSize(20), convertSize(124), convertSize(40));
         btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnPlayer.setBounds(convertSize(491), convertSize(20), convertSize(124), convertSize(40));
-        
-        btnRoulette.addMouseListener(new MouseAdapter(){
+
+        btnRoulette.addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(MouseEvent e){
-                Main.setPanel(new Betting());
+            public void mousePressed(MouseEvent e) {
+                try {
+                    Main.setPanel(new Betting());
+                } catch (IOException | NullPointerException ex) {
+                    Logger.getLogger(Startpage.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
-        
-        btnBlackjack.addMouseListener(new MouseAdapter(){
+
+        btnBlackjack.addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(MouseEvent e){
-                Main.setPanel(new PlaceBet());
+            public void mousePressed(MouseEvent e) {
+                try {
+                    Main.setPanel(new PlaceBet());
+                } catch (IOException ex) {
+                    Logger.getLogger(Startpage.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
-        
-        btnLogout.addMouseListener(new MouseAdapter(){
-           @Override
-           public void mouseClicked(MouseEvent e){
-               Player.deleteCurrentPlayer();
-               Main.setPanel(new Login());
-           }
+
+        btnLogout.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    DB.putCurrentPlayer(null);
+                    Main.setPanel(new Login());
+                } catch (IOException ex) {
+                    Logger.getLogger(Startpage.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         });
-        
-        btnPlayer.addMouseListener(new MouseAdapter(){
-           @Override
-           public void mousePressed(MouseEvent e){
-               Main.setPanel(new PlayerPage());
-           }
+
+        btnPlayer.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                try {
+                    Main.setPanel(new PlayerPage());
+                } catch (IOException ex) {
+                    Logger.getLogger(Startpage.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         });
-        
+
         lblBackground.setIcon(new ImageIcon(getImage("backgroundStartpage")));
-        
+
         layer.add(btnRoulette);
         layer.add(btnBlackjack);
         layer.add(btnLogout);
         layer.add(btnPlayer);
-        
+
         layer.moveToFront(lblBackground);
         layer.moveToFront(btnRoulette);
         layer.moveToFront(btnBlackjack);
