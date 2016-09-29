@@ -13,7 +13,7 @@ public class SplitGame {
     
     private CardList firstSplit;
     private CardList secondSplit;
-    private CardList[] splits;
+    private final CardList[] splits;
     private long wager;
     private int multiplier;
     public static final int FIRST_SPLIT = 0;

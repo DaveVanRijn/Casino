@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -56,7 +58,7 @@ public class Betting extends javax.swing.JPanel {
     private final int mouseYMin = 20;
     private final int mouseYMax = 455;
     private final int chipSize = 87;
-    private long currentWager = 10;
+    private int currentWager = 10;
     private long wager = 0;
     private JLabel lblTotalWager;
     private JLabel lblCash;
@@ -117,10 +119,10 @@ public class Betting extends javax.swing.JPanel {
                     list.add(new Clickable(name, minX, maxX, minY, maxY, numbers, multiplier));
                 }
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(Betting.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+        } catch (NumberFormatException ex) {
+            Logger.getLogger(Betting.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -207,16 +209,22 @@ public class Betting extends javax.swing.JPanel {
                         bets.get(bets.size() - 1).getLabel().setBounds(placeX, placeY, 30, 30);
                         JLabel label = bets.get(bets.size() - 1).getLabel();
                         String img;
-                        if (currentWager == 10L) {
-                            img = "/Img/chipRedMini.png";
-                        } else if (currentWager == 20L) {
-                            img = "/Img/chipGreenMini.png";
-                        } else if (currentWager == 50L) {
-                            img = "/Img/chipBlueMini.png";
-                        } else if (currentWager == 100L) {
-                            img = "/Img/chipBlackMini.png";
-                        } else {
-                            img = "/Img/chipWhiteMini.png";
+                        switch (currentWager) {
+                            case 10:
+                                img = "/Img/chipRedMini.png";
+                                break;
+                            case 20:
+                                img = "/Img/chipGreenMini.png";
+                                break;
+                            case 50:
+                                img = "/Img/chipBlueMini.png";
+                                break;
+                            case 100:
+                                img = "/Img/chipBlackMini.png";
+                                break;
+                            default:
+                                img = "/Img/chipWhiteMini.png";
+                                break;
                         }
                         label.setIcon(new ImageIcon(getClass().getResource(img)));
                         layer.add(bets.get(bets.size() - 1).getLabel());
@@ -477,7 +485,7 @@ public class Betting extends javax.swing.JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (isActive) {
-                    long customWager;
+                    int customWager;
 
                     Box box = new Box(BoxLayout.PAGE_AXIS);
                     JPanel panel = new JPanel(new BorderLayout());
@@ -506,7 +514,7 @@ public class Betting extends javax.swing.JPanel {
                                 new Object[]{"Ok", "Cancel"}, "Ok");
                         if (confirm == JOptionPane.YES_OPTION) {
                             try {
-                                customWager = Long.parseLong(txt.getText());
+                                customWager = Integer.parseInt(txt.getText());
                                 if (customWager > 0) {
                                     currentWager = customWager;
                                     lblCurrentWager.setText("Current wager: \u20ac"

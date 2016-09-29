@@ -5,13 +5,9 @@
  */
 package Blackjack;
 
-import Blackjack.Objects.Card;
+import Blackjack.Resource.AllCards;
 import Blackjack.Objects.CardList;
 import static Casino.Main.getImage;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.util.Collections;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -30,11 +26,11 @@ public class DealGame extends javax.swing.JPanel {
     private JButton btnDouble;
     private JButton btnStop;
     
-    private CardList pickedCards;
     private CardList cards;
-    private CardList playerCards;
-    private CardList splitCards;
-    private CardList dealerCards;
+    private final CardList pickedCards;
+    private final CardList playerCards;
+    private final CardList splitCards;
+    private final CardList dealerCards;
     
     private boolean sevenCards;
     private boolean splitSevenCards;
@@ -51,9 +47,8 @@ public class DealGame extends javax.swing.JPanel {
     public DealGame() {
         initComponents();
         initComps();
-        //initCards();
-        //Update van computer
         
+        cards = AllCards.getShuffledCards();
         pickedCards = new CardList();
         playerCards = new CardList();
         splitCards = new CardList();
@@ -67,32 +62,12 @@ public class DealGame extends javax.swing.JPanel {
         layer.moveToFront(background);
     }
     
-    private void initCards(){
-        cards = new CardList();
-        int counter = 2;
-        int cardAmount = 52;
-        String[] names = new String[]{"Jack", "Queen", "King", "Ace"};
-        String[] suits = new String[]{"Hearts", "Diamonds", "Spades", "Clubs"};
-        for(int i = 0; i < cardAmount; i++){
-            String face;
-            String suit = suits[i / 13];
-            int value;
-            if(counter < 11){
-                face = Integer.toString(counter);
-                value = counter;
-            } else if (counter < 14){
-                face = names[counter - 11];
-                value = 10;
-            } else {
-                face = names[3];
-                value = 11;
-            }
-            cards.add(new Card(value, face, suit));
-            if(++counter == 15){
-                counter= 2;
-            }
-        }
-        Collections.shuffle(cards);
+    private void clearGame(){
+        pickedCards.clear();
+        playerCards.clear();
+        splitCards.clear();
+        dealerCards.clear();
+        cards = AllCards.getShuffledCards();
     }
 
     /**

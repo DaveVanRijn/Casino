@@ -11,7 +11,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -25,10 +24,12 @@ import javax.swing.Timer;
 public class Edit extends JFrame {
 
     boolean doDelay = true;
-    private int delay = 15; //milliseconds
-    private final Timer time = new Timer(delay, null);
+    private final int DELAY; 
+    private final Timer time;
 
     public Edit(double endAngle) {
+        this.DELAY = 15; 
+        this.time = new Timer(DELAY, null);
         setSize(400, 400);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLayout(new BorderLayout());

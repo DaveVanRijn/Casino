@@ -7,7 +7,6 @@ package Casino;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  *
@@ -28,6 +27,7 @@ public class EncryptionKey {
      *
      * @param s The String that must be encrypted
      * @return The encrypted version of the String s
+     * @throws Casino.CharNotSupportedException
      */
     public String encrypt(String s) throws CharNotSupportedException {
         String isSupported = isSupported(s);

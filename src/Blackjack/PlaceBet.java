@@ -11,9 +11,7 @@ import Casino.Player;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
@@ -41,7 +39,7 @@ public class PlaceBet extends javax.swing.JPanel {
     
     private long bet = 0;
     private long money = Player.getCurrentPlayer().getMoney();
-    private LinkedList<Long> bets = new LinkedList<>();
+    private final LinkedList<Long> bets = new LinkedList<>();
     private boolean betPlaced = false;
 
     private JButton bet10;

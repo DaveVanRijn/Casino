@@ -7,6 +7,7 @@ package Blackjack.Objects;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -54,6 +55,10 @@ public class CardList implements List<Card> {
         }
 
         return value;
+    }
+    
+    public void shuffle(){
+        Collections.shuffle(cards);
     }
 
     @Override

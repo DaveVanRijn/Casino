@@ -6,7 +6,6 @@
 package Casino;
 
 import static Casino.Main.convertSize;
-import static Casino.Main.getImage;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -356,11 +355,7 @@ public class Login extends javax.swing.JPanel {
     }
 
     private void checkRegister() {
-        if (lblNameError.isVisible() || lblPassError.isVisible()) {
-            register = false;
-        } else {
-            register = true;
-        }
+        register = !(lblNameError.isVisible() || lblPassError.isVisible());
     }
 
     private void login(String username, char[] password) {

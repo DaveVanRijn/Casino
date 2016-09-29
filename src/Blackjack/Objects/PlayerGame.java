@@ -12,7 +12,7 @@ package Blackjack.Objects;
 public class PlayerGame {
     
     private final CardList cards;
-    private long wager;
+    private final long wager;
     private int multiplier;
     private boolean blackjack;
     

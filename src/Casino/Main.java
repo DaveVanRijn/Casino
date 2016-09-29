@@ -6,8 +6,6 @@
  */
 package Casino;
 
-import Blackjack.Objects.AllCards;
-import Blackjack.Objects.Card;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -27,7 +25,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -77,7 +74,7 @@ public class Main extends javax.swing.JFrame {
                 rememberName = null;
                 rememberPass = null;
                 write();
-           }
+            }
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -96,10 +93,10 @@ public class Main extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-        
+
         String username = System.getProperty("user.name");
-        if(username.contains("Charlotte") || username.contains("charlotte")){
-            new CharlottePanel();
+        if (username.contains("Charlotte") || username.contains("charlotte")) {
+            CharlottePanel charlottePanel = new CharlottePanel();
         }
     }
 
@@ -159,7 +156,7 @@ public class Main extends javax.swing.JFrame {
      * @return The list of players of this game
      */
     public static ArrayList<Player> getPlayers() {
-        return mainframe.players;
+        return players;
     }
 
     /**
@@ -168,7 +165,7 @@ public class Main extends javax.swing.JFrame {
      * @param p The player
      */
     public static void addPlayer(Player p) {
-        mainframe.players.add(p);
+        players.add(p);
     }
 
     /**
@@ -177,7 +174,7 @@ public class Main extends javax.swing.JFrame {
      * @param p The player
      */
     public static void removePlayer(Player p) {
-        mainframe.players.remove(p);
+        players.remove(p);
     }
 
     public static void changeTitle(String title) {
@@ -260,8 +257,8 @@ public class Main extends javax.swing.JFrame {
     public static int convertSize(int original) {
         return (int) (original * SIZE_FACTOR);
     }
-    
-    public static double getSizeFactor(){
+
+    public static double getSizeFactor() {
         return SIZE_FACTOR;
     }
 
@@ -374,7 +371,8 @@ public class Main extends javax.swing.JFrame {
             UIManager.setLookAndFeel(
                     UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+
         }
 
         EventQueue.invokeLater(() -> {
