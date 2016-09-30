@@ -3,15 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Object.Blackjack;
+package object.blackjack;
 
-import Views.Shared.Main;
+import views.shared.Main;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -22,10 +25,13 @@ import javax.swing.JLabel;
 public class CardLabel extends JLabel {
 
     private final BufferedImage image;
-    private final int degrees;
+    private final double degrees;
 
-    public CardLabel(ImageIcon icon, int degrees, Point location) {
+    public CardLabel(ImageIcon icon, double degrees, Point location, Dimension size) {
+        super();
         image = toBuffered(icon);
+//        setIcon(new ImageIcon(image));
+        setSize(size);
         this.degrees = degrees;
         setLocation(location);
     }

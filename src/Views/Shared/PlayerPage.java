@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Views.Shared;
+package views.shared;
 
-import Object.Shared.Player;
-import Resources.Java.Shared.Database;
+import object.shared.Player;
+import resources.java.shared.Database;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import static resources.java.shared.ImageLabel.getButton;
 
 /**
  *
@@ -52,9 +53,9 @@ public class PlayerPage extends javax.swing.JPanel {
         txtUsername = new JTextField(current.getUsername());
         txtPassword = new JPasswordField(current.getPassword());
         txtMoney = new JTextField(Long.toString(current.getMoney()));
-        btnEdit = new JButton(new ImageIcon(getClass().getResource("/Img/btnEdit.png")));
-        btnBack = new JButton(new ImageIcon(getClass().getResource("/Img/btnBack.png")));
-        btnSave = new JButton(new ImageIcon(getClass().getResource("/Img/btnSave.png")));
+        btnEdit = getButton("btnEdit");
+        btnBack = getButton("btnBack");
+        btnSave = getButton("btnSave");
         lblUsername = new JLabel("Username");
         lblPassword = new JLabel("Password");
         lblMoney = new JLabel("Amount of money");
@@ -230,7 +231,7 @@ public class PlayerPage extends javax.swing.JPanel {
         layer = new javax.swing.JLayeredPane();
         lblBackground = new javax.swing.JLabel();
 
-        lblBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/backgroundPlayer.png"))); // NOI18N
+        lblBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/backgroundPlayer.png"))); // NOI18N
 
         layer.setLayer(lblBackground, javax.swing.JLayeredPane.DEFAULT_LAYER);
 

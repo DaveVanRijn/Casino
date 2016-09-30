@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Resources.Java.Shared;
+package resources.java.shared;
 
-import Object.Shared.Player;
+import object.shared.Player;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import nexus.common.utils.DataUtil;
 
@@ -42,7 +43,8 @@ public class Database {
     }
 
     public List<Player> getPlayers() {
-        return (List<Player>) get(PLAYERS);
+        List<Player> list = (List<Player>) get(PLAYERS);
+        return list == null ? new ArrayList<>() : list;
     }
     
     public String[] getRemCred(){
@@ -62,8 +64,8 @@ public class Database {
 
         for (Player pl : players) {
             if (pl.getUsername().equals(p.getUsername())) {
-                pl.setMoney(p.getMoney());
-                pl.setPassword(p.getPassword());
+                pl.setMoneyDB(p.getMoney());
+                pl.setPasswordDB(p.getPassword());
                 
                 putPlayers(players);
                 return pl;

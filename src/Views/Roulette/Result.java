@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Views.Roulette;
+package views.roulette;
 
-import Object.Shared.Player;
-import Resources.Java.Shared.Database;
+import object.shared.Player;
+import resources.java.shared.Database;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -20,6 +20,9 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import static resources.java.shared.ImageLabel.getButton;
+import static resources.java.shared.ImageLabel.getImageIcon;
+import static resources.java.shared.ImageLabel.getLabel;
 
 /**
  *
@@ -59,15 +62,15 @@ public class Result extends javax.swing.JDialog {
 
     private void initComps(int random, double gain, double wager) throws IOException {
         setTitle("Result");
-        setIconImage(new ImageIcon(getClass().getResource("/Img/windowIcon.png")).getImage());
+        setIconImage(getImageIcon("windowIcon").getImage());
 
         Database db = new Database();
         Player current = db.getCurrentPlayer();
 
-        JLabel lblNumberImg = new JLabel(new ImageIcon(getClass().getResource("/Img/wheel" + random + ".png")));
+        JLabel lblNumberImg = getLabel("wheel" + random);
         JLabel lblNumber = new JLabel("The winning number is: " + random + "!");
         JLabel lblPayout = new JLabel();
-        JButton btnContinue = new JButton(new ImageIcon(getClass().getResource("/Img/btnContinue.png")));
+        JButton btnContinue = getButton("btnContinue");
 
         lblNumberImg.setBounds(173, 15, 54, 82);
         if (gain - wager > 0) {
@@ -139,7 +142,7 @@ public class Result extends javax.swing.JDialog {
 
         layer.setMaximumSize(new java.awt.Dimension(400, 300));
 
-        background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/background.png"))); // NOI18N
+        background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/background.png"))); // NOI18N
 
         layer.setLayer(background, javax.swing.JLayeredPane.DEFAULT_LAYER);
 

@@ -3,20 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Views.Shared;
+package views.shared;
 
-import Resources.Java.Shared.Database;
-import Views.Blackjack.PlaceBet;
-import static Views.Shared.Main.convertSize;
-import static Views.Shared.Main.getImage;
-import Views.Roulette.Betting;
+import resources.java.shared.Database;
+import static resources.java.shared.ImageLabel.getButton;
+import static resources.java.shared.ImageLabel.getImageIcon;
+import views.blackjack.PlaceBet;
+import static views.shared.Main.convertSize;
+import views.roulette.Betting;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 /**
@@ -35,14 +35,10 @@ public class Startpage extends javax.swing.JPanel {
     private void initComps() throws IOException {
         Database DB = new Database();
         initComponents();
-        JButton btnRoulette = new JButton(
-                new ImageIcon(getImage("btnRoulette")));
-        JButton btnBlackjack = new JButton(
-                new ImageIcon(getImage("btnBlackjack")));
-        JButton btnLogout = new JButton(
-                new ImageIcon(getImage("btnLogout")));
-        JButton btnPlayer = new JButton(
-                new ImageIcon(getImage("btnPlayer")));
+        JButton btnRoulette = getButton("btnRoulette");
+        JButton btnBlackjack = getButton("btnBlackjack");
+        JButton btnLogout = getButton("btnLogout");
+        JButton btnPlayer = getButton("btnPlayer");
 
         btnRoulette.setBounds(convertSize(262), convertSize(180), convertSize(275), convertSize(110));
         btnRoulette.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -97,7 +93,7 @@ public class Startpage extends javax.swing.JPanel {
             }
         });
 
-        lblBackground.setIcon(new ImageIcon(getImage("backgroundStartpage")));
+        lblBackground.setIcon(getImageIcon("backgroundStartpage"));
 
         layer.add(btnRoulette);
         layer.add(btnBlackjack);
@@ -123,7 +119,7 @@ public class Startpage extends javax.swing.JPanel {
         layer = new javax.swing.JLayeredPane();
         lblBackground = new javax.swing.JLabel();
 
-        lblBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/backgroundStartpage.png"))); // NOI18N
+        lblBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/backgroundStartpage.png"))); // NOI18N
 
         layer.setLayer(lblBackground, javax.swing.JLayeredPane.DEFAULT_LAYER);
 

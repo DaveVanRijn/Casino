@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Views.Roulette;
+package views.roulette;
 
-import Views.Shared.Main;
-import Object.Shared.Player;
-import Object.Roulette.Bet;
-import Object.Roulette.Clickable;
-import Object.Roulette.Wheel;
-import Resources.Java.Shared.Database;
+import views.shared.Main;
+import object.shared.Player;
+import object.roulette.Bet;
+import object.roulette.Clickable;
+import object.roulette.Wheel;
+import resources.java.shared.Database;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -46,6 +46,9 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
+import static resources.java.shared.ImageLabel.getButton;
+import static resources.java.shared.ImageLabel.getImageIcon;
+import static resources.java.shared.ImageLabel.getLabel;
 
 /**
  *
@@ -102,7 +105,7 @@ public class Betting extends javax.swing.JPanel {
         ArrayList<Clickable> list = new ArrayList<>();
         try {
             BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(getClass().getResourceAsStream("/Data/list.txt")));
+                    new InputStreamReader(getClass().getResourceAsStream("/resources/data/list.txt")));
             String line;
             try {
                 while ((line = reader.readLine()) != null) {
@@ -132,39 +135,39 @@ public class Betting extends javax.swing.JPanel {
     private void selectChip(String chipName) {
         switch (chipName) {
             case "black":
-                btnBet100.setIcon(new ImageIcon(getClass().getResource("/Img/chipBlackSelected.png")));
-                btnBet50.setIcon(new ImageIcon(getClass().getResource("/Img/chipBlue.png")));
-                btnBet20.setIcon(new ImageIcon(getClass().getResource("/Img/chipGreen.png")));
-                btnBet10.setIcon(new ImageIcon(getClass().getResource("/Img/chipRed.png")));
-                btnBetCustom.setIcon(new ImageIcon(getClass().getResource("/Img/chipWhite.png")));
+                btnBet100.setIcon(getImageIcon("chipBlackSelected"));
+                btnBet50.setIcon(getImageIcon("chipBlue"));
+                btnBet20.setIcon(getImageIcon("chipGreen"));
+                btnBet10.setIcon(getImageIcon("chipRed"));
+                btnBetCustom.setIcon(getImageIcon("chipWhite"));
                 break;
             case "blue":
-                btnBet100.setIcon(new ImageIcon(getClass().getResource("/Img/chipBlack.png")));
-                btnBet50.setIcon(new ImageIcon(getClass().getResource("/Img/chipBlueSelected.png")));
-                btnBet20.setIcon(new ImageIcon(getClass().getResource("/Img/chipGreen.png")));
-                btnBet10.setIcon(new ImageIcon(getClass().getResource("/Img/chipRed.png")));
-                btnBetCustom.setIcon(new ImageIcon(getClass().getResource("/Img/chipWhite.png")));
+                btnBet100.setIcon(getImageIcon("chipBlack"));
+                btnBet50.setIcon(getImageIcon("chipBlueSelected"));
+                btnBet20.setIcon(getImageIcon("chipGreen"));
+                btnBet10.setIcon(getImageIcon("chipRed"));
+                btnBetCustom.setIcon(getImageIcon("chipWhite"));
                 break;
             case "red":
-                btnBet100.setIcon(new ImageIcon(getClass().getResource("/Img/chipBlack.png")));
-                btnBet50.setIcon(new ImageIcon(getClass().getResource("/Img/chipBlue.png")));
-                btnBet20.setIcon(new ImageIcon(getClass().getResource("/Img/chipGreen.png")));
-                btnBet10.setIcon(new ImageIcon(getClass().getResource("/Img/chipRedSelected.png")));
-                btnBetCustom.setIcon(new ImageIcon(getClass().getResource("/Img/chipWhite.png")));
+                btnBet100.setIcon(getImageIcon("chipBlack"));
+                btnBet50.setIcon(getImageIcon("chipBlue"));
+                btnBet20.setIcon(getImageIcon("chipGreen"));
+                btnBet10.setIcon(getImageIcon("chipRedSelected"));
+                btnBetCustom.setIcon(getImageIcon("chipWhite"));
                 break;
             case "green":
-                btnBet100.setIcon(new ImageIcon(getClass().getResource("/Img/chipBlack.png")));
-                btnBet50.setIcon(new ImageIcon(getClass().getResource("/Img/chipBlue.png")));
-                btnBet20.setIcon(new ImageIcon(getClass().getResource("/Img/chipGreenSelected.png")));
-                btnBet10.setIcon(new ImageIcon(getClass().getResource("/Img/chipRed.png")));
-                btnBetCustom.setIcon(new ImageIcon(getClass().getResource("/Img/chipWhite.png")));
+                btnBet100.setIcon(getImageIcon("chipBlack"));
+                btnBet50.setIcon(getImageIcon("chipBlue"));
+                btnBet20.setIcon(getImageIcon("chipGreenSelected"));
+                btnBet10.setIcon(getImageIcon("chipRed"));
+                btnBetCustom.setIcon(getImageIcon("chipWhite"));
                 break;
             case "white":
-                btnBet100.setIcon(new ImageIcon(getClass().getResource("/Img/chipBlack.png")));
-                btnBet50.setIcon(new ImageIcon(getClass().getResource("/Img/chipBlue.png")));
-                btnBet20.setIcon(new ImageIcon(getClass().getResource("/Img/chipGreen.png")));
-                btnBet10.setIcon(new ImageIcon(getClass().getResource("/Img/chipRed.png")));
-                btnBetCustom.setIcon(new ImageIcon(getClass().getResource("/Img/chipWhiteSelected.png")));
+                btnBet100.setIcon(getImageIcon("chipBlack"));
+                btnBet50.setIcon(getImageIcon("chipBlue"));
+                btnBet20.setIcon(getImageIcon("chipGreen"));
+                btnBet10.setIcon(getImageIcon("chipRed"));
+                btnBetCustom.setIcon(getImageIcon("chipWhiteSelected"));
                 break;
         }
     }
@@ -213,22 +216,22 @@ public class Betting extends javax.swing.JPanel {
                         String img;
                         switch (currentWager) {
                             case 10:
-                                img = "/Img/chipRedMini.png";
+                                img = "chipRedMini";
                                 break;
                             case 20:
-                                img = "/Img/chipGreenMini.png";
+                                img = "chipGreenMini";
                                 break;
                             case 50:
-                                img = "/Img/chipBlueMini.png";
+                                img = "chipBlueMini";
                                 break;
                             case 100:
-                                img = "/Img/chipBlackMini.png";
+                                img = "chipBlackMini";
                                 break;
                             default:
-                                img = "/Img/chipWhiteMini.png";
+                                img = "chipWhiteMini";
                                 break;
                         }
-                        label.setIcon(new ImageIcon(getClass().getResource(img)));
+                        label.setIcon(getImageIcon(img));
                         layer.add(BETS.get(BETS.size() - 1).getLabel());
                         layer.moveToFront(BETS.get(BETS.size() - 1).getLabel());
                     } else {
@@ -335,11 +338,11 @@ public class Betting extends javax.swing.JPanel {
     }
 
     private void initComps() {
-        JLabel background = new JLabel(new ImageIcon(getClass().getResource("/Img/green.png")));
+        JLabel background = getLabel("green");
         background.setBounds(978, 0, 300, 500);
         layer.add(background);
 
-        lblChooseWager = new JLabel(new ImageIcon(getClass().getResource("/Img/lblChooseWager.png")));
+        lblChooseWager = getLabel("lblChooseWager");
         lblChooseWager.setBounds(960, 40, 260, 53);
 
         lblTotalWager = new JLabel("Total wager: \u20ac" + calculateWager());
@@ -353,7 +356,7 @@ public class Betting extends javax.swing.JPanel {
         lblCurrentWager.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblCurrentWager.setForeground(Color.WHITE);
 
-        btnPlay = new JButton(new ImageIcon(getClass().getResource("/Img/btnPlay.png")));
+        btnPlay = getButton("btnPlay");
         btnPlay.setBounds(1009, 333, 162, 53);
         btnPlay.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnPlay.addActionListener(new ActionListener() {
@@ -368,7 +371,7 @@ public class Betting extends javax.swing.JPanel {
                         CURRENT.setMoney(money);
                         double angle = (Math.toRadians((1440 + ANGLE_MAP.get(random)) * 10));
                         wheelFrame = new JDialog();
-                        JLabel background = new JLabel(new ImageIcon(getClass().getResource("/Img/backgroundWheel.png")));
+                        JLabel background = getLabel("backgroundWheel");
 
                         wheelFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
                         wheelFrame.setModal(true);
@@ -413,7 +416,7 @@ public class Betting extends javax.swing.JPanel {
             }
         });
 
-        btnBack = new JButton(new ImageIcon(getClass().getResource("/Img/btnBack.png")));
+        btnBack = getButton("btnBack");
         btnBack.setBounds(1009, 406, 162, 53);
         btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBack.addMouseListener(new MouseAdapter() {
@@ -424,7 +427,7 @@ public class Betting extends javax.swing.JPanel {
             }
         });
 
-        btnBet10 = new JButton(new ImageIcon(getClass().getResource("/Img/chipRedSelected.png")));
+        btnBet10 = getButton("chipRedSelected");
         btnBet10.setBounds(1007, 112, 87, 87);
         btnBet10.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBet10.addMouseListener(new MouseAdapter() {
@@ -439,7 +442,7 @@ public class Betting extends javax.swing.JPanel {
             }
         });
 
-        btnBet20 = new JButton(new ImageIcon(getClass().getResource("/Img/chipGreen.png")));
+        btnBet20 = getButton("chipGreen");
         btnBet20.setBounds(1107, 112, CHIP_SIZE, CHIP_SIZE);
         btnBet20.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBet20.addMouseListener(new MouseAdapter() {
@@ -454,7 +457,7 @@ public class Betting extends javax.swing.JPanel {
             }
         });
 
-        btnBet50 = new JButton(new ImageIcon(getClass().getResource("/Img/chipBlue.png")));
+        btnBet50 = getButton("chipBlue");
         btnBet50.setBounds(957, 212, CHIP_SIZE, CHIP_SIZE);
         btnBet50.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBet50.addMouseListener(new MouseAdapter() {
@@ -469,7 +472,7 @@ public class Betting extends javax.swing.JPanel {
             }
         });
 
-        btnBet100 = new JButton(new ImageIcon(getClass().getResource("/Img/chipBlack.png")));
+        btnBet100 = getButton("chipBlack");
         btnBet100.setBounds(1157, 212, CHIP_SIZE, CHIP_SIZE);
         btnBet100.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBet100.addMouseListener(new MouseAdapter() {
@@ -484,7 +487,7 @@ public class Betting extends javax.swing.JPanel {
             }
         });
 
-        btnBetCustom = new JButton(new ImageIcon(getClass().getResource("/Img/chipWhite.png")));
+        btnBetCustom = getButton("chipWhite");
         btnBetCustom.setBounds(1057, 212, CHIP_SIZE, CHIP_SIZE);
         btnBetCustom.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBetCustom.addMouseListener(new MouseAdapter() {
@@ -605,7 +608,8 @@ public class Betting extends javax.swing.JPanel {
             }
         });
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/tableLayout.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/tableLayout.png"))); // NOI18N
+        jLabel1.setPreferredSize(new java.awt.Dimension(1278, 500));
 
         layer.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -613,14 +617,12 @@ public class Betting extends javax.swing.JPanel {
         layer.setLayout(layerLayout);
         layerLayout.setHorizontalGroup(
             layerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layerLayout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addGap(0, 300, Short.MAX_VALUE))
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layerLayout.setVerticalGroup(
             layerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layerLayout.createSequentialGroup()
-                .addComponent(jLabel1)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 

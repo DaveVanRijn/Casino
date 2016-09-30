@@ -4,26 +4,21 @@
  * Blackjack
  * Taal = Nederlands
  */
-package Views.Shared;
+package views.shared;
 
-import Resources.Java.Shared.EncryptionKey;
-import Exception.Shared.CharNotSupportedException;
+import resources.java.shared.EncryptionKey;
+import exception.shared.CharNotSupportedException;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
-import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -56,7 +51,7 @@ public class Main extends javax.swing.JFrame {
         UIManager.put("OptionPane.buttonFont", new FontUIResource(STANDARD_FONT));
 
         initComponents();
-        setIconImage(new ImageIcon(getClass().getResource("/Img/windowIcon.png")).getImage());
+        setIconImage(resources.java.shared.ImageLabel.getImageIcon("windowIcon").getImage());
         JPanel panel = new Login();
         PANELS = new ArrayList<>();
         PANELS.add(panel);
@@ -159,28 +154,6 @@ public class Main extends javax.swing.JFrame {
         SIZE_FACTOR = Math.min((double) currentScreenSize.width
                 / standardScreenSize.width, (double) currentScreenSize.height
                 / standardScreenSize.height);
-    }
-
-    public static BufferedImage getImage(String name) {
-        Image image = new ImageIcon(Main.class.getResource("/Img/" + name + ".png")).getImage();
-        int width;
-        int height;
-
-        if (name.equals("backgroundBlackjack")) {
-            Rectangle screenSize = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-            width = (int) screenSize.getWidth();
-            height = (int) screenSize.getHeight();
-        } else {
-            width = (int) (image.getWidth(null) * SIZE_FACTOR);
-            height = (int) (image.getHeight(null) * SIZE_FACTOR);
-        }
-
-        BufferedImage buff = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = buff.createGraphics();
-        g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING,
-                RenderingHints.VALUE_RENDER_QUALITY));
-        boolean done = g2d.drawImage(image, 0, 0, width, height, null);
-        return buff;
     }
 
     public static int convertSize(int original) {

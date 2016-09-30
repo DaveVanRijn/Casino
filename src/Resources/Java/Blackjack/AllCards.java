@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Resources.Java.Blackjack;
+package resources.java.blackjack;
 
-import Object.Blackjack.Card;
-import Object.Blackjack.CardList;
+import object.blackjack.Card;
+import object.blackjack.CardList;
 
 /**
  *

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Object.Roulette;
+package object.roulette;
 
 import javax.swing.JLabel;
 

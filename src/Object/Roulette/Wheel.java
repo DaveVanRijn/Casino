@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Object.Roulette;
+package object.roulette;
 
-import Views.Roulette.Betting;
+import views.roulette.Betting;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.Timer;
+import static resources.java.shared.ImageLabel.getImageIcon;
 
 /**
  *
@@ -41,7 +42,7 @@ public class Wheel extends JComponent {
     public Wheel(double endAngle) {
         this.DELAY = 15;
         this.TIME = new Timer(DELAY, null);
-        WHEEL = new ImageIcon(getClass().getResource("/Img/wheel.png")).getImage();
+        WHEEL = getImageIcon("wheel").getImage();
         ActionListener taskPerformer = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {

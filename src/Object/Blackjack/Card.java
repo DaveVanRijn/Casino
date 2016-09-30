@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Object.Blackjack;
+package object.blackjack;
 
-import static Views.Shared.Main.getImage;
+import static resources.java.shared.ImageLabel.getImageIcon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -44,7 +44,7 @@ public class Card extends JLabel {
         this.suit = suit;
 
         String imageName = face.toLowerCase() + "_of_" + suit.toLowerCase();
-        this.image = new ImageIcon(getImage(imageName));
+        this.image = getImageIcon(imageName);
 
         if (back) {
             setBack();
@@ -78,7 +78,7 @@ public class Card extends JLabel {
     }
 
     public ImageIcon getBackIcon() {
-        return new ImageIcon(getImage("cardBack"));
+        return getImageIcon("cardBack");
     }
 
     @Override

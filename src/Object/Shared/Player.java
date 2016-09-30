@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Object.Shared;
+package object.shared;
 
-import Resources.Java.Shared.Database;
+import resources.java.shared.Database;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class Player implements Serializable {
 
     private final String USERNAME;
-    
+
     private String password;
     private int money;
     private int rouletteWinCounter;
@@ -77,6 +77,10 @@ public class Player implements Serializable {
             Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void setPasswordDB(String password){
+        this.password = password;
+    }
 
     /**
      * Get the ingame money of the player
@@ -106,6 +110,10 @@ public class Player implements Serializable {
         }
     }
 
+    public void setMoneyDB(int money) {
+        this.money = money;
+    }
+
     public int getRoulettePlayed() {
         return roulettePlayedCounter;
     }
@@ -131,7 +139,7 @@ public class Player implements Serializable {
     public void addRouletteWon() {
         try {
             rouletteWinCounter++;
-            
+
             Database db = new Database();
             if (db.isCurrentPlayer(this)) {
                 db.putCurrentPlayer(this);

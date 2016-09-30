@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Views.Shared;
+package views.shared;
 
-import Object.Shared.Player;
-import Resources.Java.Shared.Database;
-import static Views.Shared.Main.convertSize;
+import object.shared.Player;
+import resources.java.shared.Database;
+import static views.shared.Main.convertSize;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -31,6 +31,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import static resources.java.shared.ImageLabel.getButton;
+import static resources.java.shared.ImageLabel.getImageIcon;
 
 /**
  *
@@ -142,14 +144,10 @@ public class Login extends javax.swing.JPanel {
             }
         };
 
-        btnLogin = new JButton(
-                new ImageIcon(getClass().getResource("/Img/btnLogin.png")));
-        btnNewUser = new JButton(
-                new ImageIcon(getClass().getResource("/Img/btnNewUser.png")));
-        btnRegister = new JButton(
-                new ImageIcon(getClass().getResource("/Img/btnRegister.png")));
-        btnBack = new JButton(
-                new ImageIcon(getClass().getResource("/Img/btnBack.png")));
+        btnLogin = getButton("btnLogin");
+        btnNewUser = getButton("btnNewUser");
+        btnRegister = getButton("btnRegister");
+        btnBack = getButton("btnBack");
         txtLgnName = new JTextField();
         txtLgnName.setFont(STANDARD_FONT);
         txtLgnPass = new JPasswordField();
@@ -425,10 +423,10 @@ public class Login extends javax.swing.JPanel {
         layer.moveToFront(lblPassword);
         layer.moveToFront(lblNameError);
         layer.moveToFront(lblPassError);
-        btnExit = new JButton(new ImageIcon(getClass().getResource("/Img/btnExit.png")));
+        btnExit = getButton("btnExit");
         btnExit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnExit.setFocusable(false);
-        btnExit.setPressedIcon(new ImageIcon(getClass().getResource("/Img/btnExitPressed.png")));
+        btnExit.setPressedIcon(getImageIcon("btnExitPressed"));
         btnExit.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -458,7 +456,7 @@ public class Login extends javax.swing.JPanel {
         layer = new javax.swing.JLayeredPane();
         lblBackground = new javax.swing.JLabel();
 
-        lblBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/backgroundCasinoTitle.png"))); // NOI18N
+        lblBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/backgroundCasinoTitle.png"))); // NOI18N
 
         layer.setLayer(lblBackground, javax.swing.JLayeredPane.DEFAULT_LAYER);
 

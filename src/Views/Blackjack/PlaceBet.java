@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Views.Blackjack;
+package views.blackjack;
 
-import Views.Shared.Main;
-import static Views.Shared.Main.getImage;
-import Object.Shared.Player;
-import Resources.Java.Shared.Database;
+import views.shared.Main;
+import object.shared.Player;
+import resources.java.shared.Database;
+import static resources.java.shared.ImageLabel.getButton;
+import static resources.java.shared.ImageLabel.getImageIcon;
+import static resources.java.shared.ImageLabel.getLabel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -21,7 +23,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -143,8 +144,8 @@ public class PlaceBet extends javax.swing.JPanel {
         Player current = DB.getCurrentPlayer();
         STANDARD_FONT = new Font("Tahoma", Font.PLAIN, Main.convertSize(16));
         
-        background.setIcon(new ImageIcon(getImage("backgroundBlackjack")));
-        bet10 = new JButton(new ImageIcon(getImage("chipRedBL")));
+        background.setIcon(getImageIcon("backgroundBlackjack"));
+        bet10 = getButton("chipRedBL");
         bet10.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -163,7 +164,7 @@ public class PlaceBet extends javax.swing.JPanel {
             }
         });
 
-        bet20 = new JButton(new ImageIcon(getImage("chipGreenBL")));
+        bet20 = getButton("chipGreenBL");
         bet20.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -182,7 +183,7 @@ public class PlaceBet extends javax.swing.JPanel {
             }
         });
 
-        bet50 = new JButton(new ImageIcon(getImage("chipBlueBL")));
+        bet50 = getButton("chipBlueBL");
         bet50.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -201,7 +202,7 @@ public class PlaceBet extends javax.swing.JPanel {
             }
         });
 
-        bet100 = new JButton(new ImageIcon(getImage("chipBlackBL")));
+        bet100 = getButton("chipBlackBL");
         bet100.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -220,7 +221,7 @@ public class PlaceBet extends javax.swing.JPanel {
             }
         });
 
-        betCustom = new JButton(new ImageIcon(getImage("chipWhiteBL")));
+        betCustom = getButton("chipWhiteBL");
         betCustom.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -297,7 +298,7 @@ public class PlaceBet extends javax.swing.JPanel {
             }
         });
 
-        btnPlay = new JButton(new ImageIcon(getImage("btnPlay")));
+        btnPlay = getButton("btnPlay");
         btnPlay.addMouseListener(new MouseAdapter(){
             @Override
             public void mousePressed(MouseEvent e){
@@ -307,7 +308,7 @@ public class PlaceBet extends javax.swing.JPanel {
         
     
 
-        btnRemoveLastBet = new JButton(new ImageIcon(getImage("btnRemoveLastBet")));
+        btnRemoveLastBet = getButton("btnRemoveLastBet");
         btnRemoveLastBet.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -327,7 +328,7 @@ public class PlaceBet extends javax.swing.JPanel {
             }
         });
 
-        btnRemoveBet = new JButton(new ImageIcon(getImage("btnRemoveBet")));
+        btnRemoveBet = getButton("btnRemoveBet");
         btnRemoveBet.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -343,7 +344,7 @@ public class PlaceBet extends javax.swing.JPanel {
             }
         });
 
-        btnBack = new JButton(new ImageIcon(getImage("btnBack")));
+        btnBack = getButton("btnBack");
         btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBack.setBounds(Main.convertSize(1182), Main.convertSize(18), Main.convertSize(164), Main.convertSize(53));
         btnBack.addMouseListener(new MouseAdapter() {
@@ -370,7 +371,7 @@ public class PlaceBet extends javax.swing.JPanel {
         lblYourMoney = new JLabel("Your money: \u20ac" + money);
         lblCurrentBet = new JLabel("Current bet: \u20ac" + Long.toString(bet));
 
-        lblPlaceBet = new JLabel(new ImageIcon(getImage("lblPlaceBet")));
+        lblPlaceBet = getLabel("lblPlaceBet");
 
         sep = new JSeparator(SwingConstants.VERTICAL);
 
@@ -393,7 +394,7 @@ public class PlaceBet extends javax.swing.JPanel {
         layer = new javax.swing.JLayeredPane();
         background = new javax.swing.JLabel();
 
-        background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/backgroundBlackjack.png"))); // NOI18N
+        background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/img/backgroundBlackjack.png"))); // NOI18N
 
         layer.setLayer(background, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
