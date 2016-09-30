@@ -36,7 +36,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -194,17 +193,38 @@ public class Betting extends javax.swing.JPanel {
                         BETS.add(new Bet(click.getMultiplier(), click.getNumbers(), currentWager, new JLabel()));
                         lblTotalWager.setText("Total wager: \u20ac" + calculateWager());
                         BETS.get(BETS.size() - 1).getLabel().addMouseListener(new MouseAdapter() {
+                            private boolean pressed = false;
+                            private boolean entered = false;
+
+                            @Override
+                            public void mouseEntered(MouseEvent e) {
+                                entered = true;
+                            }
+
+                            @Override
+                            public void mouseExited(MouseEvent e) {
+                                entered = false;
+                            }
+
                             @Override
                             public void mousePressed(MouseEvent e) {
-                                layer.remove((JLabel) e.getSource());
-                                layer.repaint();
-                                for (int i = BETS.size() - 1; i > -1; i--) {
-                                    Bet bet;
-                                    if ((bet = BETS.get(i)).getLabel() == (JLabel) e.getSource()) {
-                                        money += bet.getWager();
-                                        lblCash.setText("Current money: \u20ac" + DECI_FORM.format(money));
-                                        BETS.remove(bet);
-                                        lblTotalWager.setText("Total wager: \u20ac" + calculateWager());
+                                pressed = true;
+                            }
+
+                            @Override
+                            public void mouseReleased(MouseEvent e) {
+                                if (pressed && entered) {
+                                    pressed = false;
+                                    layer.remove((JLabel) e.getSource());
+                                    layer.repaint();
+                                    for (int i = BETS.size() - 1; i > -1; i--) {
+                                        Bet bet;
+                                        if ((bet = BETS.get(i)).getLabel() == (JLabel) e.getSource()) {
+                                            money += bet.getWager();
+                                            lblCash.setText("Current money: \u20ac" + DECI_FORM.format(money));
+                                            BETS.remove(bet);
+                                            lblTotalWager.setText("Total wager: \u20ac" + calculateWager());
+                                        }
                                     }
                                 }
                             }
@@ -420,10 +440,31 @@ public class Betting extends javax.swing.JPanel {
         btnBack.setBounds(1009, 406, 162, 53);
         btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBack.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                Main.setLastPanel();
-                Main.changeTitle("Casino");
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    Main.setLastPanel();
+                    Main.changeTitle("Casino");
+                }
             }
         });
 
@@ -431,13 +472,34 @@ public class Betting extends javax.swing.JPanel {
         btnBet10.setBounds(1007, 112, 87, 87);
         btnBet10.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBet10.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                if (isActive) {
-                    currentWager = 10;
-                    lblCurrentWager.setText("Current wager: \u20ac"
-                            + DECI_FORM.format(currentWager));
-                    selectChip("red");
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    if (isActive) {
+                        currentWager = 10;
+                        lblCurrentWager.setText("Current wager: \u20ac"
+                                + DECI_FORM.format(currentWager));
+                        selectChip("red");
+                    }
                 }
             }
         });
@@ -446,13 +508,34 @@ public class Betting extends javax.swing.JPanel {
         btnBet20.setBounds(1107, 112, CHIP_SIZE, CHIP_SIZE);
         btnBet20.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBet20.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                if (isActive) {
-                    currentWager = 20;
-                    lblCurrentWager.setText("Current wager: \u20ac"
-                            + DECI_FORM.format(currentWager));
-                    selectChip("green");
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    if (isActive) {
+                        currentWager = 20;
+                        lblCurrentWager.setText("Current wager: \u20ac"
+                                + DECI_FORM.format(currentWager));
+                        selectChip("green");
+                    }
                 }
             }
         });
@@ -461,13 +544,34 @@ public class Betting extends javax.swing.JPanel {
         btnBet50.setBounds(957, 212, CHIP_SIZE, CHIP_SIZE);
         btnBet50.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBet50.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                if (isActive) {
-                    currentWager = 50;
-                    lblCurrentWager.setText("Current wager: \u20ac"
-                            + DECI_FORM.format(currentWager));
-                    selectChip("blue");
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    if (isActive) {
+                        currentWager = 50;
+                        lblCurrentWager.setText("Current wager: \u20ac"
+                                + DECI_FORM.format(currentWager));
+                        selectChip("blue");
+                    }
                 }
             }
         });
@@ -476,13 +580,34 @@ public class Betting extends javax.swing.JPanel {
         btnBet100.setBounds(1157, 212, CHIP_SIZE, CHIP_SIZE);
         btnBet100.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBet100.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                if (isActive) {
-                    currentWager = 100;
-                    lblCurrentWager.setText("Current wager: \u20ac"
-                            + DECI_FORM.format(currentWager));
-                    selectChip("black");
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    if (isActive) {
+                        currentWager = 100;
+                        lblCurrentWager.setText("Current wager: \u20ac"
+                                + DECI_FORM.format(currentWager));
+                        selectChip("black");
+                    }
                 }
             }
         });
@@ -491,57 +616,78 @@ public class Betting extends javax.swing.JPanel {
         btnBetCustom.setBounds(1057, 212, CHIP_SIZE, CHIP_SIZE);
         btnBetCustom.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBetCustom.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                if (isActive) {
-                    int customWager;
+                pressed = true;
+            }
 
-                    Box box = new Box(BoxLayout.PAGE_AXIS);
-                    JPanel panel = new JPanel(new BorderLayout());
-                    JLabel betLabel = new JLabel("Enter your wager:");
-                    betLabel.setFont(STANDARD_FONT);
-                    JTextField txt = new JTextField(Long.toString(currentWager), 10);
-                    txt.setFont(STANDARD_FONT);
-                    betLabel.setAlignmentX(LEFT_ALIGNMENT);
-                    txt.setAlignmentX(LEFT_ALIGNMENT);
-                    box.add(betLabel);
-                    box.add(Box.createVerticalStrut(5));
-                    box.add(txt);
-                    panel.add(box, BorderLayout.CENTER);
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    if (isActive) {
+                        int customWager;
 
-                    txt.addFocusListener(new FocusAdapter() {
-                        @Override
-                        public void focusGained(FocusEvent ev) {
-                            txt.setText("");
-                        }
-                    });
+                        Box box = new Box(BoxLayout.PAGE_AXIS);
+                        JPanel panel = new JPanel(new BorderLayout());
+                        JLabel betLabel = new JLabel("Enter your wager:");
+                        betLabel.setFont(STANDARD_FONT);
+                        JTextField txt = new JTextField(Long.toString(currentWager), 10);
+                        txt.setFont(STANDARD_FONT);
+                        betLabel.setAlignmentX(LEFT_ALIGNMENT);
+                        txt.setAlignmentX(LEFT_ALIGNMENT);
+                        box.add(betLabel);
+                        box.add(Box.createVerticalStrut(5));
+                        box.add(txt);
+                        panel.add(box, BorderLayout.CENTER);
 
-                    do {
-                        int confirm = JOptionPane.showOptionDialog(null, panel,
-                                "Custom wager", JOptionPane.YES_NO_OPTION,
-                                JOptionPane.PLAIN_MESSAGE, null,
-                                new Object[]{"Ok", "Cancel"}, "Ok");
-                        if (confirm == JOptionPane.YES_OPTION) {
-                            try {
-                                customWager = Integer.parseInt(txt.getText());
-                                if (customWager > 0) {
-                                    currentWager = customWager;
-                                    lblCurrentWager.setText("Current wager: \u20ac"
-                                            + DECI_FORM.format(currentWager));
-                                    selectChip("white");
-                                } else {
-                                    throw new NumberFormatException();
-                                }
-                            } catch (NumberFormatException ex) {
-                                JOptionPane.showMessageDialog(null,
-                                        "Enter a valid positive number!",
-                                        "Error", JOptionPane.ERROR_MESSAGE);
-                                customWager = 0;
+                        txt.addFocusListener(new FocusAdapter() {
+                            @Override
+                            public void focusGained(FocusEvent ev) {
+                                txt.setText("");
                             }
-                        } else {
-                            break;
-                        }
-                    } while (customWager == 0);
+                        });
+
+                        do {
+                            int confirm = JOptionPane.showOptionDialog(null, panel,
+                                    "Custom wager", JOptionPane.YES_NO_OPTION,
+                                    JOptionPane.PLAIN_MESSAGE, null,
+                                    new Object[]{"Ok", "Cancel"}, "Ok");
+                            if (confirm == JOptionPane.YES_OPTION) {
+                                try {
+                                    customWager = Integer.parseInt(txt.getText());
+                                    if (customWager > 0) {
+                                        currentWager = customWager;
+                                        lblCurrentWager.setText("Current wager: \u20ac"
+                                                + DECI_FORM.format(currentWager));
+                                        selectChip("white");
+                                    } else {
+                                        throw new NumberFormatException();
+                                    }
+                                } catch (NumberFormatException ex) {
+                                    JOptionPane.showMessageDialog(null,
+                                            "Enter a valid positive number!",
+                                            "Error", JOptionPane.ERROR_MESSAGE);
+                                    customWager = 0;
+                                }
+                            } else {
+                                break;
+                            }
+                        } while (customWager == 0);
+                    }
                 }
             }
         });
@@ -576,13 +722,34 @@ public class Betting extends javax.swing.JPanel {
         layer.moveToFront(btnBack);
         choices = makeList();
         addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                if (money > 0) {
-                    getBet(e.getPoint());
-                } else {
-                    JOptionPane.showMessageDialog(null, "No money left!", "Too bad",
-                            JOptionPane.ERROR_MESSAGE);
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    if (money > 0) {
+                        getBet(e.getPoint());
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No money left!", "Too bad",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });

@@ -12,7 +12,6 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -27,7 +26,7 @@ import static resources.java.shared.ImageLabel.getButton;
 public class PlayerPage extends javax.swing.JPanel {
 
     private final Font STANDARD_FONT = new Font("Tahoma", Font.PLAIN, 16);
-    
+
     private boolean editing = false;
 
     /**
@@ -39,8 +38,8 @@ public class PlayerPage extends javax.swing.JPanel {
         initComponents();
         initComps();
     }
-    
-    private void initComps() throws IOException{
+
+    private void initComps() throws IOException {
         Database db = new Database();
 
         Player current = db.getCurrentPlayer();
@@ -91,74 +90,137 @@ public class PlayerPage extends javax.swing.JPanel {
         txtMoney.setFont(STANDARD_FONT);
 
         btnEdit.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                editing = true;
-                txtUsername.setEnabled(true);
-                txtPassword.setEnabled(true);
-                txtPassword.setEchoChar((char) 0);
-                txtMoney.setEnabled(true);
+                pressed = true;
+            }
 
-                layer.remove(btnEdit);
-                layer.repaint();
-                layer.add(btnSave);
-                layer.moveToFront(btnSave);
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    editing = true;
+                    txtUsername.setEnabled(true);
+                    txtPassword.setEnabled(true);
+                    txtPassword.setEchoChar((char) 0);
+                    txtMoney.setEnabled(true);
+
+                    layer.remove(btnEdit);
+                    layer.repaint();
+                    layer.add(btnSave);
+                    layer.moveToFront(btnSave);
+                }
             }
         });
 
         btnBack.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                if (!editing) {
-                    Main.setLastPanel();
-                } else {
-                    JOptionPane.showMessageDialog(null, "You must save your changes "
-                            + "before going back.", "Error", JOptionPane.ERROR_MESSAGE);
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    if (!editing) {
+                        Main.setLastPanel();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "You must save your changes "
+                                + "before going back.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
 
         btnSave.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                int money;
-                String password;
-                String username;
-                StringBuilder builder = new StringBuilder();
-                try {
-                    username = txtUsername.getText();
-                    for (char c : txtPassword.getPassword()) {
-                        builder.append(c);
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    int money;
+                    String password;
+                    String username;
+                    StringBuilder builder = new StringBuilder();
+                    try {
+                        username = txtUsername.getText();
+                        for (char c : txtPassword.getPassword()) {
+                            builder.append(c);
+                        }
+                        password = builder.toString();
+                        money = Integer.parseInt(txtMoney.getText());
+
+                        if (username.isEmpty() || password.isEmpty()
+                                || txtMoney.getText().isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "Enter a username, "
+                                    + "password and amount of money!", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            current.setPassword(password);
+                            current.setMoney(money);
+                            JOptionPane.showMessageDialog(null, "Your account "
+                                    + "information has been saved", "Succes",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                            txtUsername.setEnabled(false);
+                            txtPassword.setEnabled(false);
+                            txtPassword.setEchoChar('\u2022');
+                            txtMoney.setEnabled(false);
+
+                            layer.remove(btnSave);
+                            layer.repaint();
+                            layer.add(btnEdit);
+
+                            layer.moveToFront(btnEdit);
+                            editing = false;
+                        }
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "Enter a valid amount of "
+                                + "money!", "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                    password = builder.toString();
-                    money = Integer.parseInt(txtMoney.getText());
-
-                    if (username.isEmpty() || password.isEmpty()
-                            || txtMoney.getText().isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Enter a username, "
-                                + "password and amount of money!", "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        current.setPassword(password);
-                        current.setMoney(money);
-                        JOptionPane.showMessageDialog(null, "Your account "
-                                + "information has been saved", "Succes",
-                                JOptionPane.INFORMATION_MESSAGE);
-                        txtUsername.setEnabled(false);
-                        txtPassword.setEnabled(false);
-                        txtPassword.setEchoChar('\u2022');
-                        txtMoney.setEnabled(false);
-
-                        layer.remove(btnSave);
-                        layer.repaint();
-                        layer.add(btnEdit);
-
-                        layer.moveToFront(btnEdit);
-                        editing = false;
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "Enter a valid amount of "
-                            + "money!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -274,7 +336,7 @@ public class PlayerPage extends javax.swing.JPanel {
     private JLabel lblRouletteWonValue;
     private JLabel lblRoulettePercentageWon;
     private JLabel lblRoulettePercentageWonValue;
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane layer;
     private javax.swing.JLabel lblBackground;

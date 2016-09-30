@@ -17,7 +17,6 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import static resources.java.shared.ImageLabel.getButton;
@@ -94,9 +93,30 @@ public class Result extends javax.swing.JDialog {
         lblPayout.setForeground(Color.WHITE);
 
         btnContinue.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                proceed();
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    proceed();
+                }
             }
         });
 

@@ -49,46 +49,130 @@ public class Startpage extends javax.swing.JPanel {
         btnPlayer.setBounds(convertSize(491), convertSize(20), convertSize(124), convertSize(40));
 
         btnRoulette.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                try {
-                    Main.setPanel(new Betting());
-                } catch (IOException | NullPointerException ex) {
-                    Logger.getLogger(Startpage.class.getName()).log(Level.SEVERE, null, ex);
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    try {
+                        Main.setPanel(new Betting());
+                    } catch (IOException | NullPointerException ex) {
+                        Logger.getLogger(Startpage.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
 
         btnBlackjack.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                try {
-                    Main.setPanel(new PlaceBet());
-                } catch (IOException ex) {
-                    Logger.getLogger(Startpage.class.getName()).log(Level.SEVERE, null, ex);
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    try {
+                        Main.setPanel(new PlaceBet());
+                    } catch (IOException ex) {
+                        Logger.getLogger(Startpage.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
 
         btnLogout.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
             @Override
-            public void mouseClicked(MouseEvent e) {
-                try {
-                    DB.putCurrentPlayer(null);
-                    Main.setPanel(new Login());
-                } catch (IOException ex) {
-                    Logger.getLogger(Startpage.class.getName()).log(Level.SEVERE, null, ex);
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    try {
+                        DB.putCurrentPlayer(null);
+                        Main.setPanel(new Login());
+                    } catch (IOException ex) {
+                        Logger.getLogger(Startpage.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
 
         btnPlayer.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                try {
-                    Main.setPanel(new PlayerPage());
-                } catch (IOException ex) {
-                    Logger.getLogger(Startpage.class.getName()).log(Level.SEVERE, null, ex);
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    try {
+                        Main.setPanel(new PlayerPage());
+                    } catch (IOException ex) {
+                        Logger.getLogger(Startpage.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });

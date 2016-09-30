@@ -41,7 +41,7 @@ public class PlaceBet extends javax.swing.JPanel {
     private final Database DB;
     private final Player CURRENT;
     private Font STANDARD_FONT;
-    
+
     private int bet = 0;
     private int money;
     private final LinkedList<Integer> bets = new LinkedList<>();
@@ -55,7 +55,7 @@ public class PlaceBet extends javax.swing.JPanel {
         DB = new Database();
         money = DB.getCurrentPlayer().getMoney();
         CURRENT = DB.getCurrentPlayer();
-        if(CURRENT == null){
+        if (CURRENT == null) {
             throw new NullPointerException("Current player is null.");
         }
         initComps();
@@ -143,204 +143,372 @@ public class PlaceBet extends javax.swing.JPanel {
     private void initComps() {
         Player current = DB.getCurrentPlayer();
         STANDARD_FONT = new Font("Tahoma", Font.PLAIN, Main.convertSize(16));
-        
+
         background.setIcon(getImageIcon("backgroundBlackjack"));
         bet10 = getButton("chipRedBL");
         bet10.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+            
+            @Override
+            public void mouseEntered(MouseEvent e){
+                entered = true;
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e){
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                if (money >= 10) {
-                    bets.push(10);
-                    bet += 10;
-                    money -= 10;
-                    betPlaced = true;
-                    lblYourMoney.setText("Your money: \u20ac" + money);
-                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
-                    lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
-                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
-                } else {
-                    showError("Not enough money left!");
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    if (money >= 10) {
+                        bets.push(10);
+                        bet += 10;
+                        money -= 10;
+                        betPlaced = true;
+                        lblYourMoney.setText("Your money: \u20ac" + money);
+                        lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
+                        lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
+                        lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
+                    } else {
+                        showError("Not enough money left!");
+                    }
                 }
             }
         });
 
         bet20 = getButton("chipGreenBL");
         bet20.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+            
+            @Override
+            public void mouseEntered(MouseEvent e){
+                entered = true;
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e){
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                if (money > - 20) {
-                    bets.push(20);
-                    bet += 20;
-                    money -= 20;
-                    betPlaced = true;
-                    lblYourMoney.setText("Your money: \u20ac" + money);
-                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
-                    lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
-                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
-                } else {
-                    showError("Not enough money left!");
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    if (money > - 20) {
+                        bets.push(20);
+                        bet += 20;
+                        money -= 20;
+                        betPlaced = true;
+                        lblYourMoney.setText("Your money: \u20ac" + money);
+                        lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
+                        lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
+                        lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
+                    } else {
+                        showError("Not enough money left!");
+                    }
                 }
             }
         });
 
         bet50 = getButton("chipBlueBL");
         bet50.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+            
+            @Override
+            public void mouseEntered(MouseEvent e){
+                entered = true;
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e){
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                if (money >= 50) {
-                    bets.push(50);
-                    bet += 50;
-                    money -= 50;
-                    betPlaced = true;
-                    lblYourMoney.setText("Your money: \u20ac" + money);
-                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
-                    lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
-                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
-                } else {
-                    showError("Not enough money left!");
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    if (money >= 50) {
+                        bets.push(50);
+                        bet += 50;
+                        money -= 50;
+                        betPlaced = true;
+                        lblYourMoney.setText("Your money: \u20ac" + money);
+                        lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
+                        lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
+                        lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
+                    } else {
+                        showError("Not enough money left!");
+                    }
                 }
             }
         });
 
         bet100 = getButton("chipBlackBL");
         bet100.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+            
+            @Override
+            public void mouseEntered(MouseEvent e){
+                entered = true;
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e){
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                if (money >= 100) {
-                    bets.push(100);
-                    bet += 100;
-                    money -= 100;
-                    betPlaced = true;
-                    lblYourMoney.setText("Your money: \u20ac" + money);
-                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
-                    lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
-                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
-                } else {
-                    showError("Not enough money left!");
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    if (money >= 100) {
+                        bets.push(100);
+                        bet += 100;
+                        money -= 100;
+                        betPlaced = true;
+                        lblYourMoney.setText("Your money: \u20ac" + money);
+                        lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
+                        lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
+                        lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
+                    } else {
+                        showError("Not enough money left!");
+                    }
                 }
             }
         });
 
         betCustom = getButton("chipWhiteBL");
         betCustom.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+            
+            @Override
+            public void mouseEntered(MouseEvent e){
+                entered = true;
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e){
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                int customBet;
+                pressed = true;
+            }
 
-                Box box = new Box(BoxLayout.PAGE_AXIS);
-                JPanel panel = new JPanel(new BorderLayout());
-                JLabel lblBet = new JLabel("Enter your bet:");
-                JTextField txt = new JTextField("Your bet", 10);
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    int customBet;
 
-                lblBet.setFont(STANDARD_FONT);
-                lblBet.setAlignmentX(LEFT_ALIGNMENT);
+                    Box box = new Box(BoxLayout.PAGE_AXIS);
+                    JPanel panel = new JPanel(new BorderLayout());
+                    JLabel lblBet = new JLabel("Enter your bet:");
+                    JTextField txt = new JTextField("Your bet", 10);
 
-                txt.setFont(STANDARD_FONT);
-                txt.setAlignmentX(LEFT_ALIGNMENT);
-                txt.addFocusListener(new FocusAdapter() {
-                    @Override
-                    public void focusGained(FocusEvent e) {
-                        txt.setText("");
-                    }
+                    lblBet.setFont(STANDARD_FONT);
+                    lblBet.setAlignmentX(LEFT_ALIGNMENT);
 
-                    @Override
-                    public void focusLost(FocusEvent e) {
-                        if (txt.getText().isEmpty()) {
-                            txt.setText("Your bet");
+                    txt.setFont(STANDARD_FONT);
+                    txt.setAlignmentX(LEFT_ALIGNMENT);
+                    txt.addFocusListener(new FocusAdapter() {
+                        @Override
+                        public void focusGained(FocusEvent e) {
+                            txt.setText("");
                         }
-                    }
-                });
 
-                box.add(lblBet);
-                box.add(Box.createVerticalStrut(5));
-                box.add(txt);
-                panel.add(box, BorderLayout.CENTER);
-
-                do {
-                    int option = JOptionPane.showOptionDialog(null, panel, "Enter your Bet", JOptionPane.YES_NO_OPTION,
-                            JOptionPane.PLAIN_MESSAGE, null,
-                            new Object[]{"Ok", "Cancel"}, "Ok");
-
-                    if (option == JOptionPane.YES_OPTION) {
-                        try {
-                            customBet = Integer.parseInt(txt.getText());
-
-                            if (customBet > 0) {
-                                if (customBet <= money) {
-                                    if (bets.size() > 0) {
-                                        bets.clear();
-                                        money += bet;
-                                    }
-                                    bets.push(customBet);
-                                    bet = customBet;
-                                    money -= customBet;
-                                    betPlaced = true;
-
-                                    lblYourMoney.setText("Your money: \u20ac" + money);
-                                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
-                                    lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
-                                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
-                                } else {
-                                    showError("Not enough money left!");
-                                    customBet = 0;
-                                }
-                            } else {
-                                throw new NumberFormatException();
+                        @Override
+                        public void focusLost(FocusEvent e) {
+                            if (txt.getText().isEmpty()) {
+                                txt.setText("Your bet");
                             }
-                        } catch (NumberFormatException ex) {
-                            showError("Enter a valid positive number!");
-                            customBet = 0;
                         }
-                    } else {
-                        break;
-                    }
-                } while (customBet <= 0);
+                    });
+
+                    box.add(lblBet);
+                    box.add(Box.createVerticalStrut(5));
+                    box.add(txt);
+                    panel.add(box, BorderLayout.CENTER);
+
+                    do {
+                        int option = JOptionPane.showOptionDialog(null, panel, "Enter your Bet", JOptionPane.YES_NO_OPTION,
+                                JOptionPane.PLAIN_MESSAGE, null,
+                                new Object[]{"Ok", "Cancel"}, "Ok");
+
+                        if (option == JOptionPane.YES_OPTION) {
+                            try {
+                                customBet = Integer.parseInt(txt.getText());
+
+                                if (customBet > 0) {
+                                    if (customBet <= money) {
+                                        if (bets.size() > 0) {
+                                            bets.clear();
+                                            money += bet;
+                                        }
+                                        bets.push(customBet);
+                                        bet = customBet;
+                                        money -= customBet;
+                                        betPlaced = true;
+
+                                        lblYourMoney.setText("Your money: \u20ac" + money);
+                                        lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
+                                        lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
+                                        lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
+                                    } else {
+                                        showError("Not enough money left!");
+                                        customBet = 0;
+                                    }
+                                } else {
+                                    throw new NumberFormatException();
+                                }
+                            } catch (NumberFormatException ex) {
+                                showError("Enter a valid positive number!");
+                                customBet = 0;
+                            }
+                        } else {
+                            break;
+                        }
+                    } while (customBet <= 0);
+                }
             }
         });
 
         btnPlay = getButton("btnPlay");
-        btnPlay.addMouseListener(new MouseAdapter(){
+        btnPlay.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+            
             @Override
-            public void mousePressed(MouseEvent e){
-                Main.setPanel(new DealGame(bet));
+            public void mouseEntered(MouseEvent e){
+                entered = true;
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e){
+                entered = false;
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    Main.setPanel(new DealGame(bet));
+                }
             }
         });
-        
-    
 
         btnRemoveLastBet = getButton("btnRemoveLastBet");
         btnRemoveLastBet.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+            
+            @Override
+            public void mouseEntered(MouseEvent e){
+                entered = true;
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e){
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                if (bets.size() > 0) {
-                    long lastBet = bets.pop();
-                    bet -= lastBet;
-                    money += lastBet;
-                    if (bets.isEmpty()) {
-                        betPlaced = false;
-                    }
+                pressed = true;
+            }
 
-                    lblYourMoney.setText("Your money: \u20ac" + money);
-                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
-                    lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
-                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    if (bets.size() > 0) {
+                        long lastBet = bets.pop();
+                        bet -= lastBet;
+                        money += lastBet;
+                        if (bets.isEmpty()) {
+                            betPlaced = false;
+                        }
+
+                        lblYourMoney.setText("Your money: \u20ac" + money);
+                        lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
+                        lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
+                        lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
+                    }
                 }
             }
         });
 
         btnRemoveBet = getButton("btnRemoveBet");
         btnRemoveBet.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+            
+            @Override
+            public void mouseEntered(MouseEvent e){
+                entered = true;
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e){
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                bets.clear();
-                money += bet;
-                bet = 0;
-                betPlaced = false;
+                pressed = true;
+            }
 
-                lblYourMoney.setText("Your money: \u20ac" + money);
-                lblYourMoney.setSize(lblYourMoney.getPreferredSize().width, Main.convertSize(25));
-                lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
-                lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width, Main.convertSize(25));
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    bets.clear();
+                    money += bet;
+                    bet = 0;
+                    betPlaced = false;
+
+                    lblYourMoney.setText("Your money: \u20ac" + money);
+                    lblYourMoney.setSize(lblYourMoney.getPreferredSize().width,
+                            Main.convertSize(25));
+                    lblCurrentBet.setText("Current bet: \u20ac" + Long.toString(bet));
+                    lblCurrentBet.setSize(lblCurrentBet.getPreferredSize().width,
+                            Main.convertSize(25));
+                }
             }
         });
 
@@ -348,22 +516,43 @@ public class PlaceBet extends javax.swing.JPanel {
         btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBack.setBounds(Main.convertSize(1182), Main.convertSize(18), Main.convertSize(164), Main.convertSize(53));
         btnBack.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+            
+            @Override
+            public void mouseEntered(MouseEvent e){
+                entered = true;
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e){
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                if (betPlaced) {
-                    int option = JOptionPane.showOptionDialog(null, "You will lose your bet "
-                            + "if you go back now, proceed?", "Confirm",
-                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-                            null, null, "No");
-                    if (option == JOptionPane.YES_OPTION) {
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    if (betPlaced) {
+                        int option = JOptionPane.showOptionDialog(null, "You will lose your bet "
+                                + "if you go back now, proceed?", "Confirm",
+                                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+                                null, null, "No");
+                        if (option == JOptionPane.YES_OPTION) {
+                            current.setMoney(money);
+                            Main.setLastPanel();
+                            Main.changeTitle("Casino");
+                        }
+                    } else {
                         current.setMoney(money);
                         Main.setLastPanel();
                         Main.changeTitle("Casino");
                     }
-                } else {
-                    current.setMoney(money);
-                    Main.setLastPanel();
-                    Main.changeTitle("Casino");
                 }
             }
         });

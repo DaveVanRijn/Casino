@@ -22,7 +22,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -299,81 +298,165 @@ public class Login extends javax.swing.JPanel {
 
         layer.moveToFront(lblBackground);
         btnLogin.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                try {
-                    login(txtLgnName.getText(), txtLgnPass.getPassword());
-                } catch (IOException ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    try {
+                        login(txtLgnName.getText(), txtLgnPass.getPassword());
+                    } catch (IOException ex) {
+                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
 
         btnNewUser.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                layer.remove(btnNewUser);
-                layer.remove(btnLogin);
-                layer.remove(txtLgnName);
-                layer.remove(txtLgnPass);
-                layer.remove(chkRemember);
-                layer.add(txtNewName);
-                layer.add(txtNewPass);
-                layer.add(btnRegister);
-                layer.add(btnBack);
-                layer.add(lblMoney);
-                layer.add(txtNewMoney);
-                layer.repaint();
+                pressed = true;
+            }
 
-                layer.moveToFront(txtNewName);
-                layer.moveToFront(txtNewPass);
-                layer.moveToFront(btnRegister);
-                layer.moveToFront(btnBack);
-                layer.moveToFront(lblUsername);
-                layer.moveToFront(lblPassword);
-                layer.moveToFront(lblMoney);
-                layer.moveToFront(txtNewMoney);
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    layer.remove(btnNewUser);
+                    layer.remove(btnLogin);
+                    layer.remove(txtLgnName);
+                    layer.remove(txtLgnPass);
+                    layer.remove(chkRemember);
+                    layer.add(txtNewName);
+                    layer.add(txtNewPass);
+                    layer.add(btnRegister);
+                    layer.add(btnBack);
+                    layer.add(lblMoney);
+                    layer.add(txtNewMoney);
+                    layer.repaint();
+
+                    layer.moveToFront(txtNewName);
+                    layer.moveToFront(txtNewPass);
+                    layer.moveToFront(btnRegister);
+                    layer.moveToFront(btnBack);
+                    layer.moveToFront(lblUsername);
+                    layer.moveToFront(lblPassword);
+                    layer.moveToFront(lblMoney);
+                    layer.moveToFront(txtNewMoney);
+                }
             }
         });
 
         btnRegister.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                if (legitName && register) {
-                    try {
-                        register(txtNewName.getText(), txtNewPass.getPassword(),
-                                txtNewMoney.getText());
-                    } catch (IOException ex) {
-                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    if (legitName && register) {
+                        try {
+                            register(txtNewName.getText(), txtNewPass.getPassword(),
+                                    txtNewMoney.getText());
+                        } catch (IOException ex) {
+                            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Check username or password!",
+                                "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Check username or password!",
-                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
 
         btnBack.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
-                layer.remove(txtNewName);
-                layer.remove(txtNewPass);
-                layer.remove(txtNewMoney);
-                layer.remove(lblMoney);
-                layer.remove(btnRegister);
-                layer.remove(btnBack);
-                layer.repaint();
-                layer.add(txtLgnName);
-                layer.add(txtLgnPass);
-                layer.add(chkRemember);
-                layer.add(btnLogin);
-                layer.add(btnNewUser);
+                pressed = true;
+            }
 
-                layer.moveToFront(txtLgnName);
-                layer.moveToFront(txtLgnPass);
-                layer.moveToFront(chkRemember);
-                layer.moveToFront(btnLogin);
-                layer.moveToFront(btnNewUser);
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    layer.remove(txtNewName);
+                    layer.remove(txtNewPass);
+                    layer.remove(txtNewMoney);
+                    layer.remove(lblMoney);
+                    layer.remove(btnRegister);
+                    layer.remove(btnBack);
+                    layer.repaint();
+                    layer.add(txtLgnName);
+                    layer.add(txtLgnPass);
+                    layer.add(chkRemember);
+                    layer.add(btnLogin);
+                    layer.add(btnNewUser);
+
+                    layer.moveToFront(txtLgnName);
+                    layer.moveToFront(txtLgnPass);
+                    layer.moveToFront(chkRemember);
+                    layer.moveToFront(btnLogin);
+                    layer.moveToFront(btnNewUser);
+                }
             }
         });
 
@@ -428,9 +511,29 @@ public class Login extends javax.swing.JPanel {
         btnExit.setFocusable(false);
         btnExit.setPressedIcon(getImageIcon("btnExitPressed"));
         btnExit.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                pressed = true;
+            }
+
             @Override
             public void mouseReleased(MouseEvent e) {
-                Main.exit();
+                if (pressed && entered) {
+                    Main.exit();
+                }
             }
         });
 

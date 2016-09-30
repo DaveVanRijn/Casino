@@ -14,7 +14,6 @@ import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.Timer;
 import static resources.java.shared.ImageLabel.getImageIcon;
@@ -28,27 +27,29 @@ public class Wheel extends JComponent {
     boolean doDelay = true;
     private final int DELAY;
     private final Timer TIME;
-    private final Image WHEEL;
+    private Image wheel;
     private int angle = 0;
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         angle += 1;
-        AffineTransform trans = AffineTransform.getRotateInstance(angle / 10.0, WHEEL.getWidth(null) / 2, WHEEL.getHeight(null) / 2);
-        ((Graphics2D) g).drawImage(WHEEL, trans, this);
+        AffineTransform trans = AffineTransform.getRotateInstance(angle / 10.0, wheel.getWidth(null) / 2, wheel.getHeight(null) / 2);
+        ((Graphics2D) g).drawImage(wheel, trans, this);
     }
 
     public Wheel(double endAngle) {
         this.DELAY = 15;
         this.TIME = new Timer(DELAY, null);
-        WHEEL = getImageIcon("wheel").getImage();
+        wheel = getImageIcon("wheel").getImage();
         ActionListener taskPerformer = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                Wheel.this.repaint();
                 if (angle >= endAngle) {
                     TIME.stop();
+                    angle = (int) (endAngle - 1);
+                    wheel = getImageIcon("wheel").getImage();
+                    Wheel.this.repaint();
                 }
                 if (!TIME.isRunning()) {
                     try {
@@ -58,6 +59,7 @@ public class Wheel extends JComponent {
                         Logger.getLogger(Wheel.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                Wheel.this.repaint();
                 if (angle >= toRadian(1080) * 10) {
                     if (doDelay) {
                         TIME.setDelay(TIME.getDelay() + 1);
@@ -67,6 +69,7 @@ public class Wheel extends JComponent {
                     }
                 }
             }
+
         };
         TIME.addActionListener(taskPerformer);
         TIME.start();

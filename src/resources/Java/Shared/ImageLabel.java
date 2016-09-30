@@ -5,6 +5,7 @@
  */
 package resources.java.shared;
 
+import java.awt.Cursor;
 import views.shared.Main;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
@@ -25,7 +26,7 @@ public class ImageLabel {
 
     private static final String SUFFIX = ".png";
 
-    public static ImageIcon getImageIcon(String imageId){
+    public static ImageIcon getImageIcon(String imageId) {
         URL url = ImageLabel.class.getResource("/resources/img/" + imageId + SUFFIX);
         if (url != null) {
             return new ImageIcon(getImage(imageId));
@@ -33,14 +34,22 @@ public class ImageLabel {
         return null;
     }
 
-    public static JLabel getLabel(String imageId){
-        return new JLabel(getImageIcon(imageId));
+    public static JLabel getLabel(String imageId) {
+        ImageIcon image = getImageIcon(imageId);
+        JLabel lbl = new JLabel(image);
+        lbl.setSize(image.getIconWidth(), image.getIconHeight());
+        return lbl;
     }
 
-    public static JButton getButton(String imageId){
-        return new JButton(getImageIcon(imageId));
+    public static JButton getButton(String imageId) {
+        ImageIcon image = getImageIcon(imageId);
+        JButton btn = new JButton(image);
+        btn.setPressedIcon(getImageIcon(imageId + "Pressed"));
+        btn.setSize(image.getIconWidth(), image.getIconHeight());
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        return btn;
     }
-    
+
     private static BufferedImage getImage(String name) {
         Image image = new ImageIcon(Main.class.getResource("/resources/img/" + name + ".png")).getImage();
         int width;

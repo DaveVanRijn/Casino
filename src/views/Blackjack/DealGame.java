@@ -5,7 +5,7 @@
  */
 package views.blackjack;
 
-import exception.shared.ResourceNotExistingException;
+import java.awt.Component;
 import object.blackjack.Card;
 import object.blackjack.CardLabel;
 import resources.java.blackjack.AllCards;
@@ -13,11 +13,15 @@ import object.blackjack.CardList;
 import static resources.java.shared.ImageLabel.getImageIcon;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import object.shared.NumberLabel;
+import static resources.java.shared.ImageLabel.getButton;
+import static resources.java.shared.ImageLabel.getLabel;
+import views.shared.Main;
 
 /**
  *
@@ -35,6 +39,10 @@ public class DealGame extends javax.swing.JPanel {
             SEVENTH_COORD = new Point(1112, 250);//1112, 250 > 843, 167
     private final Point[] COORDS = new Point[]{FIRST_COORD, SECOND_COORD,
         THIRD_COORD, FOURTH_COORD, FIFTH_COORD, SIXTH_COORD, SEVENTH_COORD};
+    private final Double[] DEGREES = new Double[]{0.0, 0.0, 0.0, -13.75, 13.75, -27.5, 27.5};
+    private final Dimension[] DIMENSIONS = new Dimension[]{new Dimension(160, 232),
+        new Dimension(160, 232), new Dimension(160, 232), new Dimension(212, 264),
+        new Dimension(212, 264), new Dimension(250, 280), new Dimension(250, 280)};
 
     private int dealingTo;
 
@@ -46,6 +54,7 @@ public class DealGame extends javax.swing.JPanel {
     private boolean splitGame;
     private boolean forcedStop;
     private boolean splitForcedStop;
+    private boolean firstValue = true;
 
     private int wager;
     private int multiplier;
@@ -83,28 +92,40 @@ public class DealGame extends javax.swing.JPanel {
         Card c1 = PLAYER_CARDS.get(0);
         Card c2 = PLAYER_CARDS.get(1);
 
-        CardLabel cl1 = new CardLabel(c1.getIcon(), 0, COORDS[0], new Dimension(160, 232));
-        CardLabel cl2 = new CardLabel(c2.getIcon(), 0, COORDS[1], new Dimension(160, 232));
-        CardLabel cl3 = new CardLabel(c2.getIcon(), 0, COORDS[2], new Dimension(160, 232));
-        CardLabel cl4 = new CardLabel(c1.getIcon(), -13.75, COORDS[3], new Dimension(212, 264));
-        CardLabel cl5 = new CardLabel(c2.getIcon(), 13.75, COORDS[4], new Dimension(212, 264));
-        CardLabel cl6 = new CardLabel(c1.getIcon(), -27.5, COORDS[5], new Dimension(250, 280));
-        CardLabel cl7 = new CardLabel(c2.getIcon(), 27.5, COORDS[6], new Dimension(250, 280));
+        CardLabel cl1 = new CardLabel(c1.getIcon(), DEGREES[0], COORDS[0], DIMENSIONS[0], true);
+        CardLabel cl2 = new CardLabel(c2.getIcon(), DEGREES[1], COORDS[1], DIMENSIONS[1], true);
+        CardLabel cl3 = new CardLabel(c2.getIcon(), DEGREES[2], COORDS[2], DIMENSIONS[2], true);
+        CardLabel cl4 = new CardLabel(c1.getIcon(), DEGREES[3], COORDS[3], DIMENSIONS[3], true);
+        CardLabel cl5 = new CardLabel(c2.getIcon(), DEGREES[4], COORDS[4], DIMENSIONS[4], true);
+        CardLabel cl6 = new CardLabel(c1.getIcon(), DEGREES[5], COORDS[5], DIMENSIONS[5], true);
+        CardLabel cl7 = new CardLabel(c2.getIcon(), DEGREES[6], COORDS[6], DIMENSIONS[6], true);
+        
+        cl2.addMouseListener(new MouseAdapter(){
+           @Override
+           public void mousePressed(MouseEvent e){
+               Main.setPanel(new DealGame(wager));
+           }
+        });
+        dealingTo = PLAYER;
+        setValueLabel();
+        firstValue = false;
 
         layer.add(cl1);
         layer.add(cl2);
-        layer.add(cl3);
-        layer.add(cl4);
-        layer.add(cl5);
-        layer.add(cl6);
-        layer.add(cl7);
         layer.moveToFront(cl1);
         layer.moveToFront(cl2);
-        layer.moveToFront(cl3);
-        layer.moveToFront(cl4);
-        layer.moveToFront(cl5);
-        layer.moveToFront(cl6);
-        layer.moveToFront(cl7);
+        cl1.slide();
+        cl2.slide();
+//        layer.add(cl3);
+//        layer.add(cl4);
+//        layer.add(cl5);
+//        layer.add(cl6);
+//        layer.add(cl7);
+//        layer.moveToFront(cl3);
+//        layer.moveToFront(cl4);
+//        layer.moveToFront(cl5);
+//        layer.moveToFront(cl6);
+//        layer.moveToFront(cl7);
 
         //Check dealer has blackjack
         if (DEALER_CARDS.getValue() == 21) {
@@ -117,9 +138,6 @@ public class DealGame extends javax.swing.JPanel {
             endGame();
             return;
         }
-
-        // No Blackjack, begin game
-        dealingTo = PLAYER;
 
         //Check if Player can play a split game
         boolean hasSplit = PLAYER_CARDS.get(0).getFace().equals(PLAYER_CARDS.get(1).getFace());
@@ -145,11 +163,19 @@ public class DealGame extends javax.swing.JPanel {
             default:
                 System.out.println("Invalid person number. 0 = PLAYER, 1 = SPLIT, 2 = DEALER");
         }
+        setValueLabel();
     }
 
     private void dealPlayer() {
         int total, cardCount;
-        PLAYER_CARDS.add(getRandomCard());
+        Card c = getRandomCard();
+        PLAYER_CARDS.add(c);
+        int cardIndex = PLAYER_CARDS.size() - 1;
+        CardLabel card = new CardLabel(c.getIcon(), DEGREES[cardIndex],
+                COORDS[cardIndex], DIMENSIONS[cardIndex], true);
+        layer.add(card);
+        layer.moveToFront(card);
+        card.slide();
 
         //Check if player has too much points and can flip aces
         total = PLAYER_CARDS.getValue();
@@ -316,14 +342,119 @@ public class DealGame extends javax.swing.JPanel {
         }
     }
 
+    private void setValueLabel() {
+        switch (dealingTo) {
+            case PLAYER:
+                setValueLabel(PLAYER_CARDS.getValue());
+                break;
+            case SPLIT:
+                setValueLabel(SPLIT_CARDS.getValue());
+                break;
+            case DEALER:
+                setValueLabel(DEALER_CARDS.getValue());
+                break;
+        }
+    }
+
+    private void setValueLabel(int val) {
+        for (Component c : layer.getComponents()) {
+            if (c instanceof NumberLabel) {
+                layer.remove(c);
+            }
+        }
+        String value = Integer.toString(val);
+        String[] numbers = value.split("");
+        JLabel lblValue = getLabel("value");
+        int totalSize = NumberLabel.getTotalWidth(numbers) + lblValue.getSize().width;
+
+        int valueX = (getPreferredSize().width / 2) - (totalSize / 2);
+        int y = (int) (getPreferredSize().height / 1.60);
+
+        lblValue.setLocation(valueX, y);
+
+        JLabel[] labels = new JLabel[numbers.length + 1];
+        labels[0] = lblValue;
+
+        int firstX = valueX + lblValue.getSize().width + 13;
+        labels[1] = new NumberLabel(Integer.parseInt(numbers[0]), null, new Point(firstX, y));
+
+        for (int i = 2; i < labels.length; i++) {
+            NumberLabel prev = (NumberLabel) labels[i - 1];
+            labels[i] = new NumberLabel(Integer.parseInt(numbers[i - 1]), prev, null);
+        }
+        for (JLabel l : labels) {
+            if ((l instanceof NumberLabel || (firstValue))) {
+                layer.add(l);
+                layer.moveToFront(l);
+            }
+        }
+    }
+    
+    private void addTo(Component c){
+        layer.add(c);
+        layer.moveToFront(c);
+    }
+
     private void initComps() {
 //        Only needed when using non-converted coordinates
 //        convertCoords();
 
+        JLabel overlay = getLabel("blackjackCardsOverlay");
+        overlay.setLocation(0, 0);
+        overlay.setSize(overlay.getPreferredSize());
+
         background.setIcon(getImageIcon("backgroundBlackjack"));
+
+        btnHit = getButton("btnHit");
+        btnSplit = getButton("btnSplit");
+        btnDouble = getButton("btnDouble");
+        btnStop = getButton("btnStop");
+        
+        int row1 = COORDS[0].y;
+        int row2 = row1 + btnHit.getSize().height + 20;
+        int column1 = COORDS[0].x - btnHit.getSize().width - 40;
+        int column2 = COORDS[1].x + DIMENSIONS[1].width + 40;
+        
+        btnHit.addMouseListener(new MouseAdapter(){
+            private boolean pressed = false;
+            private boolean entered = false;
+            
+            @Override
+            public void mouseEntered(MouseEvent e){
+                entered = true;
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e){
+                entered = false;
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent e){
+                pressed = true;
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e){
+                if(pressed && entered){
+                    pressed = false;
+                    deal();
+                }
+            }
+        });
+        
+        btnHit.setLocation(column1, row1);
+        btnSplit.setLocation(column2, row1);
+        btnDouble.setLocation(column1, row2);
+        btnStop.setLocation(column2, row2);
+
         layer.removeAll();
-        layer.add(background);
-        layer.moveToFront(background);
+        addTo(background);
+        addTo(overlay);
+        addTo(btnHit);
+        addTo(btnSplit);
+        addTo(btnDouble);
+        addTo(btnStop);
     }
 
     /**

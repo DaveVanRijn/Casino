@@ -147,7 +147,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     private static void setSizeFactor() {
-        Rectangle screenSpace = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+        Rectangle screenSpace = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds(); //1366, 728
         Dimension currentScreenSize = new Dimension((int) screenSpace.getWidth(), (int) screenSpace.getHeight());
         Dimension standardScreenSize = new Dimension(1366, 728);
 
@@ -162,6 +162,10 @@ public class Main extends javax.swing.JFrame {
 
     public static double getSizeFactor() {
         return SIZE_FACTOR;
+    }
+    
+    public static Rectangle getScreenSize(){
+        return GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
     }
 
     public static void exit() {
