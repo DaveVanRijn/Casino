@@ -51,7 +51,7 @@ public class DealGame extends javax.swing.JPanel {
     private final CardList SPLIT_CARDS;
     private final CardList DEALER_CARDS;
 
-    private boolean splitGame;
+    private final boolean splitGame;
     private boolean forcedStop;
     private boolean splitForcedStop;
     private boolean firstValue = true;
@@ -94,38 +94,22 @@ public class DealGame extends javax.swing.JPanel {
 
         CardLabel cl1 = new CardLabel(c1.getIcon(), DEGREES[0], COORDS[0], DIMENSIONS[0], true);
         CardLabel cl2 = new CardLabel(c2.getIcon(), DEGREES[1], COORDS[1], DIMENSIONS[1], true);
-        CardLabel cl3 = new CardLabel(c2.getIcon(), DEGREES[2], COORDS[2], DIMENSIONS[2], true);
-        CardLabel cl4 = new CardLabel(c1.getIcon(), DEGREES[3], COORDS[3], DIMENSIONS[3], true);
-        CardLabel cl5 = new CardLabel(c2.getIcon(), DEGREES[4], COORDS[4], DIMENSIONS[4], true);
-        CardLabel cl6 = new CardLabel(c1.getIcon(), DEGREES[5], COORDS[5], DIMENSIONS[5], true);
-        CardLabel cl7 = new CardLabel(c2.getIcon(), DEGREES[6], COORDS[6], DIMENSIONS[6], true);
-        
-        cl2.addMouseListener(new MouseAdapter(){
-           @Override
-           public void mousePressed(MouseEvent e){
-               Main.setPanel(new DealGame(wager));
-           }
+
+        cl2.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Main.setPanel(new DealGame(wager));
+            }
         });
         dealingTo = PLAYER;
         setValueLabel();
         firstValue = false;
 
-        layer.add(cl1);
-        layer.add(cl2);
-        layer.moveToFront(cl1);
-        layer.moveToFront(cl2);
+        addTo(cl1);
+        addTo(cl2);
+
         cl1.slide();
         cl2.slide();
-//        layer.add(cl3);
-//        layer.add(cl4);
-//        layer.add(cl5);
-//        layer.add(cl6);
-//        layer.add(cl7);
-//        layer.moveToFront(cl3);
-//        layer.moveToFront(cl4);
-//        layer.moveToFront(cl5);
-//        layer.moveToFront(cl6);
-//        layer.moveToFront(cl7);
 
         //Check dealer has blackjack
         if (DEALER_CARDS.getValue() == 21) {
@@ -166,6 +150,13 @@ public class DealGame extends javax.swing.JPanel {
         setValueLabel();
     }
 
+    private void doDouble() {
+        if (dealingTo == PLAYER) {
+            wager *= 2;
+            deal();
+        }
+    }
+
     private void dealPlayer() {
         int total, cardCount;
         Card c = getRandomCard();
@@ -173,8 +164,7 @@ public class DealGame extends javax.swing.JPanel {
         int cardIndex = PLAYER_CARDS.size() - 1;
         CardLabel card = new CardLabel(c.getIcon(), DEGREES[cardIndex],
                 COORDS[cardIndex], DIMENSIONS[cardIndex], true);
-        layer.add(card);
-        layer.moveToFront(card);
+        addTo(card);
         card.slide();
 
         //Check if player has too much points and can flip aces
@@ -218,7 +208,13 @@ public class DealGame extends javax.swing.JPanel {
 
     private void dealSplit() {
         int total, cardCount;
-        SPLIT_CARDS.add(getRandomCard());
+        Card c = getRandomCard();
+        SPLIT_CARDS.add(c);
+        int cardIndex = SPLIT_CARDS.size() - 1;
+        CardLabel card = new CardLabel(c.getIcon(), DEGREES[cardIndex],
+                COORDS[cardIndex], DIMENSIONS[cardIndex], true);
+        addTo(card);
+        card.slide();
 
         //Check if split has too much points and can flip aces
         total = SPLIT_CARDS.getValue();
@@ -254,7 +250,14 @@ public class DealGame extends javax.swing.JPanel {
 
     private void dealDealer() {
         int total;
-        DEALER_CARDS.add(getRandomCard());
+        Card c = getRandomCard();
+        DEALER_CARDS.add(c);
+        int cardIndex = DEALER_CARDS.size() - 1;
+        CardLabel card = new CardLabel(c.getIcon(), DEGREES[cardIndex],
+                COORDS[cardIndex], DIMENSIONS[cardIndex], true);
+        addTo(card);
+        card.slide();
+
         total = DEALER_CARDS.getValue();
 
         //Check if dealer has too much points
@@ -389,8 +392,8 @@ public class DealGame extends javax.swing.JPanel {
             }
         }
     }
-    
-    private void addTo(Component c){
+
+    private void addTo(Component c) {
         layer.add(c);
         layer.moveToFront(c);
     }
@@ -409,40 +412,70 @@ public class DealGame extends javax.swing.JPanel {
         btnSplit = getButton("btnSplit");
         btnDouble = getButton("btnDouble");
         btnStop = getButton("btnStop");
-        
+
         int row1 = COORDS[0].y;
         int row2 = row1 + btnHit.getSize().height + 20;
         int column1 = COORDS[0].x - btnHit.getSize().width - 40;
         int column2 = COORDS[1].x + DIMENSIONS[1].width + 40;
-        
-        btnHit.addMouseListener(new MouseAdapter(){
+
+        btnHit.addMouseListener(new MouseAdapter() {
             private boolean pressed = false;
             private boolean entered = false;
-            
+
             @Override
-            public void mouseEntered(MouseEvent e){
+            public void mouseEntered(MouseEvent e) {
                 entered = true;
             }
-            
+
             @Override
-            public void mouseExited(MouseEvent e){
+            public void mouseExited(MouseEvent e) {
                 entered = false;
             }
-            
+
             @Override
-            public void mousePressed(MouseEvent e){
+            public void mousePressed(MouseEvent e) {
                 pressed = true;
             }
-            
+
             @Override
-            public void mouseReleased(MouseEvent e){
-                if(pressed && entered){
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
                     pressed = false;
                     deal();
                 }
             }
         });
-        
+
+        btnDouble.addMouseListener(new MouseAdapter() {
+            private boolean pressed = false;
+            private boolean entered = false;
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                entered = true;
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                entered = false;
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                pressed = true;
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (pressed && entered) {
+                    pressed = false;
+                    System.out.println(wager);
+                    doDouble();
+                    System.out.println(wager + "\n");
+                }
+            }
+        });
+
         btnHit.setLocation(column1, row1);
         btnSplit.setLocation(column2, row1);
         btnDouble.setLocation(column1, row2);
@@ -499,9 +532,6 @@ public class DealGame extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     // Swing components
-    private JLabel lblPlayer;
-    private JLabel lblDealer;
-    private JLabel lblSplit;
     private JButton btnHit;
     private JButton btnSplit;
     private JButton btnDouble;
